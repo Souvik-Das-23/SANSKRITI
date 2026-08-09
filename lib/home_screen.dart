@@ -1,6 +1,7 @@
 // lib/screens/home_screen.dart
 import 'package:flutter/material.dart';
-import '../app_theme.dart';
+import 'app_theme.dart'; // Ab '../' ki zaroorat nahi kyunki dono lib folder mein hain
+import 'screens/festival_calendar_screen.dart'; // Yahan folder ka naam jodna padega/ Nayi screen ka import
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -15,7 +16,7 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 1. Header Section (Added 'const' for performance boost)
+              // 1. Header Section
               const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -43,7 +44,7 @@ class HomeScreen extends StatelessWidget {
               
               const SizedBox(height: 30),
 
-              // 2. 🌟 NAYA SERVICES SECTION 🌟
+              // 2. 🌟 SERVICES SECTION 🌟
               const Text(
                 "Our Services", 
                 style: TextStyle(color: AppTheme.textLight, fontSize: 20, fontWeight: FontWeight.bold),
@@ -59,12 +60,10 @@ class HomeScreen extends StatelessWidget {
                       title: "Festival\nCalendar",
                       icon: Icons.calendar_month,
                       onTap: () {
-            
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Festival Calendar Opening Soon!"), 
-                            backgroundColor: AppTheme.accentGold,
-                          )
+                        // Festival Calendar Screen open karega
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const FestivalCalendarScreen()),
                         );
                       }
                     ),
@@ -72,14 +71,13 @@ class HomeScreen extends StatelessWidget {
                   
                   const SizedBox(width: 16),
                   
-                  // Service 2: Booking Section
+                  // Service 2: Heritage Booking Section
                   Expanded(
                     child: _buildServiceCard(
                       context,
                       title: "Heritage\nBooking",
                       icon: Icons.book_online,
                       onTap: () {
-                        
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text("Booking Section Opening Soon!"), 
@@ -94,7 +92,7 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: 30),
 
-              // 3. Optional Banner
+              // 3. Banner Image
               Container(
                 width: double.infinity,
                 height: 150,
