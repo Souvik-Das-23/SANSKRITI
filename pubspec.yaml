@@ -1,0 +1,44 @@
+name: sanskriti
+description: "A modern Indian heritage showcase app."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # UI Packages
+  flutter_staggered_grid_view: ^0.7.0
+  google_fonts: ^6.1.0
+  
+  # Map Packages
+  flutter_map: ^6.1.0
+  latlong2: ^0.9.0
+  geolocator: ^14.0.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.4.1 # 👈 YEH NAYA PACKAGE ADD KIYA
+
+flutter:
+  uses-material-design: true
+
+# App Icon Configuration
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/app_icon.png"
+
+# 👇 YEH NAYI CONFIGURATION ADD KAREIN 👇
+flutter_native_splash:
+  color: "#121212" # Hamara Royal Dark background
+  image: "assets/app_icon.png" # Splash screen image
+  android_12:
+    color: "#121212"
+    image: "assets/app_icon.png"
