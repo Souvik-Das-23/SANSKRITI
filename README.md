@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # sanskriti
 
 A new Flutter project.
@@ -15,3 +16,6 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+=======
+# SANSKRITI
+>>>>>>> 27898a9227dfe304e1a77704f9303cb3d5dcc7a8
