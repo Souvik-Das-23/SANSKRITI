@@ -53,7 +53,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _applyFilters() {
-    var list = _allPlaces;
+    var list = List<HeritagePlace>.from(_allPlaces);
     if (_selectedCategory != HeritageCategory.all) {
       list = list.where((p) => p.category == _selectedCategory).toList();
     }

@@ -598,7 +598,7 @@ class HeritageRepository {
     ),
   ];
 
-  static List<HeritagePlace> getAllPlaces() => List.unmodifiable(_places);
+  static List<HeritagePlace> getAllPlaces() => List<HeritagePlace>.from(_places);
 
   static List<HeritagePlace> getPlacesByCategory(HeritageCategory category) {
     if (category == HeritageCategory.all) return getAllPlaces();

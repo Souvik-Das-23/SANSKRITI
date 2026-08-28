@@ -101,7 +101,7 @@ class KalaBazaarRepository {
     ),
   ];
 
-  static List<CraftItem> getAllCrafts() => List.unmodifiable(_crafts);
+  static List<CraftItem> getAllCrafts() => List<CraftItem>.from(_crafts);
 
   static List<CraftItem> getCraftsByType(CraftType type) {
     if (type == CraftType.all) return getAllCrafts();

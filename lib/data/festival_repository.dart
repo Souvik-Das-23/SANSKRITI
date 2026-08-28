@@ -120,7 +120,7 @@ class FestivalRepository {
     ),
   ];
 
-  static List<Festival> getAllFestivals() => List.unmodifiable(_festivals);
+  static List<Festival> getAllFestivals() => List<Festival>.from(_festivals);
 
   static List<Festival> getFestivalsByRegion(String region) {
     if (region == 'All') return getAllFestivals();
