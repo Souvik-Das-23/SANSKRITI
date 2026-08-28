@@ -13,6 +13,7 @@ class FavoritesService extends ChangeNotifier {
 
   bool isPlaceFavorite(String placeId) => _favoritePlaceIds.contains(placeId);
   bool isFestivalSaved(String festivalId) => _savedFestivalIds.contains(festivalId);
+  bool isFestivalReminded(String festivalId) => _savedFestivalIds.contains(festivalId);
 
   void togglePlaceFavorite(HeritagePlace place) {
     if (_favoritePlaceIds.contains(place.id)) {
@@ -35,6 +36,8 @@ class FavoritesService extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void toggleFestivalReminder(Festival festival) => toggleFestivalSaved(festival);
 
   List<String> get favoritePlaceIds => _favoritePlaceIds.toList();
   List<String> get savedFestivalIds => _savedFestivalIds.toList();

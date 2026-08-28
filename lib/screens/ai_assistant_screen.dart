@@ -1,3 +1,5 @@
+// lib/screens/ai_assistant_screen.dart
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../app_theme.dart';
@@ -14,48 +16,61 @@ class AiAssistantScreen extends StatefulWidget {
 }
 
 class _AiAssistantScreenState extends State<AiAssistantScreen> {
-  final TextEditingController _textController = TextEditingController();
+  final TextEditingController _inputController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  final List<AiMessage> _messages = [];
+  final List<ChatMessage> _messages = [];
   bool _isTyping = false;
+
+  final List<String> _quickPrompts = [
+    '🏛️ How is Dravidian architecture different from Nagara?',
+    '🗓️ 3-day cultural itinerary for Rajasthan forts',
+    '🪨 What is the secret of the Konark Sun Temple wheels?',
+    '🎨 Tell me about Krishnanagar clay doll heritage',
+  ];
 
   @override
   void initState() {
     super.initState();
-    // Initial welcome greeting from Veda AI
     _messages.add(
-      AiMessage(
-        text: 'नमस्ते! I am **Veda**, your Sanskriti Cultural & Heritage AI Assistant.\n\n'
-            'Ask me anything about India\'s ancient monuments, temple architecture (Dravidian/Nagara), dynastic chronicles, sacred festivals, or custom travel itineraries!',
+      ChatMessage(
+        text: '॥ नमस्ते ॥ I am Veda, your AI Cultural & Historical Companion.\n\nAsk me anything regarding India\'s dynastic chronicles, temple architecture, UNESCO monuments, or customized travel routes.',
         isUser: false,
         timestamp: DateTime.now(),
       ),
     );
   }
 
-  void _sendMessage(String query) async {
-    if (query.trim().isEmpty) return;
-    _textController.clear();
+  void _sendMessage(String text) async {
+    if (text.trim().isEmpty) return;
+
+    final userMsg = text.trim();
+    _inputController.clear();
 
     setState(() {
-      _messages.add(
-        AiMessage(
-          text: query,
-          isUser: true,
-          timestamp: DateTime.now(),
-        ),
-      );
+      _messages.add(ChatMessage(text: userMsg, isUser: true, timestamp: DateTime.now()));
       _isTyping = true;
     });
     _scrollToBottom();
 
-    final response = await AiHeritageService.getResponse(query);
+    final aiResponse = await AiHeritageService.getResponse(userMsg);
+    final linkedPlace = aiResponse.placeReferenceId != null
+        ? HeritageRepository.getPlaceById(aiResponse.placeReferenceId!)
+        : null;
 
-    setState(() {
-      _isTyping = false;
-      _messages.add(response);
-    });
-    _scrollToBottom();
+    if (mounted) {
+      setState(() {
+        _isTyping = false;
+        _messages.add(
+          ChatMessage(
+            text: aiResponse.text,
+            isUser: false,
+            timestamp: DateTime.now(),
+            linkedPlace: linkedPlace,
+          ),
+        );
+      });
+      _scrollToBottom();
+    }
   }
 
   void _scrollToBottom() {
@@ -72,303 +87,278 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final suggestedPrompts = AiHeritageService.getSuggestedPrompts();
-
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,
-      appBar: AppBar(
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
+      body: SafeArea(
+        child: Column(
           children: [
-            const Icon(Icons.auto_awesome, color: AppTheme.accentGold, size: 20),
-            const SizedBox(width: 8),
-            Text(
-              'Veda Cultural AI',
-              style: GoogleFonts.cinzel(fontWeight: FontWeight.bold, fontSize: 18),
+            // Top Modern Glass Header
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              decoration: BoxDecoration(
+                color: AppTheme.surfaceGlass,
+                border: Border(bottom: BorderSide(color: AppTheme.accentGold.withValues(alpha: 0.2))),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 42,
+                    height: 42,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: AppTheme.goldGradient,
+                    ),
+                    child: const Center(
+                      child: Icon(Icons.auto_awesome, color: AppTheme.backgroundDark, size: 20),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'VEDA CULTURAL AI',
+                        style: GoogleFonts.cinzel(
+                          color: AppTheme.accentGoldLight,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
+                      Text(
+                        'Online • Dynasties & Architecture Scholar',
+                        style: GoogleFonts.outfit(color: AppTheme.emeraldGreen, fontSize: 11),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            // Quick Prompt Chips
+            Container(
+              height: 48,
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: _quickPrompts.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () => _sendMessage(_quickPrompts[index]),
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: AppTheme.cardDark,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.3)),
+                      ),
+                      child: Center(
+                        child: Text(
+                          _quickPrompts[index],
+                          style: GoogleFonts.outfit(fontSize: 11, color: AppTheme.accentGoldLight),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+
+            // Chat Messages List
+            Expanded(
+              child: ListView.builder(
+                controller: _scrollController,
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                itemCount: _messages.length,
+                itemBuilder: (context, index) {
+                  final msg = _messages[index];
+                  return _buildMessageBubble(context, msg);
+                },
+              ),
+            ),
+
+            // Typing Indicator
+            if (_isTyping)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+                child: Row(
+                  children: [
+                    const SizedBox(
+                      width: 14,
+                      height: 14,
+                      child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.accentGold),
+                    ),
+                    const SizedBox(width: 10),
+                    Text('Veda is formulating historical response...', style: GoogleFonts.outfit(fontSize: 11, color: AppTheme.textMuted)),
+                  ],
+                ),
+              ),
+
+            // Bottom Input Bar
+            Container(
+              margin: const EdgeInsets.fromLTRB(16, 6, 16, 85),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppTheme.surfaceGlass,
+                borderRadius: BorderRadius.circular(28),
+                border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.35)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.5),
+                    blurRadius: 14,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(28),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _inputController,
+                          onSubmitted: _sendMessage,
+                          style: GoogleFonts.outfit(color: AppTheme.textLight, fontSize: 13.5),
+                          decoration: InputDecoration(
+                            hintText: 'Ask Veda about temples, dynasties, heritage...',
+                            hintStyle: GoogleFonts.outfit(color: AppTheme.textMuted, fontSize: 12.5),
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => _sendMessage(_inputController.text),
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: AppTheme.goldGradient,
+                          ),
+                          child: const Icon(Icons.send_rounded, color: AppTheme.backgroundDark, size: 18),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh, color: AppTheme.accentGold),
-            tooltip: 'Clear Chat',
-            onPressed: () {
-              setState(() {
-                _messages.clear();
-                _messages.add(
-                  AiMessage(
-                    text: 'Chat history cleared. How may I assist your cultural exploration today? 🙏',
-                    isUser: false,
-                    timestamp: DateTime.now(),
-                  ),
-                );
-              });
-            },
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Suggested prompts horizontally scrollable
-          Container(
-            height: 46,
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              itemCount: suggestedPrompts.length,
-              itemBuilder: (context, index) {
-                final prompt = suggestedPrompts[index];
-                return GestureDetector(
-                  onTap: () => _sendMessage(prompt),
-                  child: Container(
-                    margin: const EdgeInsets.only(right: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: AppTheme.cardDark,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.3)),
-                    ),
-                    child: Center(
-                      child: Text(
-                        prompt,
-                        style: GoogleFonts.outfit(
-                          fontSize: 11,
-                          color: AppTheme.accentGoldLight,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-
-          // Messages List
-          Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              padding: const EdgeInsets.all(16),
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                final msg = _messages[index];
-                return _buildMessageBubble(msg);
-              },
-            ),
-          ),
-
-          // Typing Indicator
-          if (_isTyping)
-            Padding(
-              padding: const EdgeInsets.only(left: 20, bottom: 8),
-              child: Row(
-                children: [
-                  const SizedBox(
-                    width: 14,
-                    height: 14,
-                    child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.accentGold),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Veda is consulting the historical chronicles...',
-                    style: GoogleFonts.outfit(fontSize: 11, color: AppTheme.textMuted),
-                  ),
-                ],
-              ),
-            ),
-
-          // Input Bar
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              color: AppTheme.surfaceDark,
-              border: Border(top: BorderSide(color: AppTheme.accentGold.withValues(alpha: 0.3))),
-            ),
-            child: SafeArea(
-              top: false,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppTheme.cardDark,
-                        borderRadius: BorderRadius.circular(24),
-                        border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.3)),
-                      ),
-                      child: TextField(
-                        controller: _textController,
-                        style: GoogleFonts.outfit(color: AppTheme.textLight, fontSize: 13),
-                        decoration: InputDecoration(
-                          hintText: 'Ask about temples, dynasties, routes...',
-                          hintStyle: GoogleFonts.outfit(color: AppTheme.textMuted, fontSize: 12),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          border: InputBorder.none,
-                        ),
-                        onSubmitted: (val) => _sendMessage(val),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  GestureDetector(
-                    onTap: () => _sendMessage(_textController.text),
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: AppTheme.goldGradient,
-                      ),
-                      child: const Icon(Icons.send, color: AppTheme.backgroundDark, size: 18),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
 
-  Widget _buildMessageBubble(AiMessage msg) {
-    if (msg.isUser) {
-      return Align(
-        alignment: Alignment.centerRight,
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 12, left: 40),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: const BoxDecoration(
-            gradient: AppTheme.goldGradient,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(18),
-              topRight: Radius.circular(18),
-              bottomLeft: Radius.circular(18),
-            ),
+  Widget _buildMessageBubble(BuildContext context, ChatMessage msg) {
+    return Align(
+      alignment: msg.isUser ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.82),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: msg.isUser ? AppTheme.accentGold.withValues(alpha: 0.18) : AppTheme.cardDark,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: msg.isUser ? AppTheme.accentGold.withValues(alpha: 0.5) : AppTheme.accentGold.withValues(alpha: 0.2),
           ),
-          child: Text(
-            msg.text,
-            style: GoogleFonts.outfit(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: AppTheme.backgroundDark,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
             ),
-          ),
+          ],
         ),
-      );
-    } else {
-      HeritagePlace? referencedPlace;
-      if (msg.placeReferenceId != null) {
-        referencedPlace = HeritageRepository.getPlaceById(msg.placeReferenceId!);
-      }
-
-      return Align(
-        alignment: Alignment.centerLeft,
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 14, right: 30),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppTheme.cardDark,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(18),
-              topRight: Radius.circular(18),
-              bottomRight: Radius.circular(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              msg.text,
+              style: GoogleFonts.outfit(
+                fontSize: 13.5,
+                height: 1.5,
+                color: msg.isUser ? AppTheme.accentGoldLight : AppTheme.textLight,
+              ),
             ),
-            border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.3)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppTheme.surfaceDark,
-                    ),
-                    child: const Icon(Icons.auto_awesome, color: AppTheme.accentGold, size: 14),
+            if (msg.linkedPlace != null) ...[
+              const SizedBox(height: 12),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DetailsScreen(place: msg.linkedPlace!)),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: AppTheme.surfaceDark,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.4)),
                   ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'VEDA AI',
-                    style: GoogleFonts.cinzel(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.accentGold,
-                      letterSpacing: 1.0,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Text(
-                msg.text,
-                style: GoogleFonts.outfit(
-                  fontSize: 13,
-                  height: 1.5,
-                  color: AppTheme.textLight,
-                ),
-              ),
-              if (referencedPlace != null) ...[
-                const SizedBox(height: 12),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DetailsScreen(place: referencedPlace!),
+                  child: Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          msg.linkedPlace!.heroImage,
+                          width: 44,
+                          height: 44,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Container(width: 44, height: 44, color: AppTheme.cardDark),
+                        ),
                       ),
-                    );
-                  },
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppTheme.surfaceDark,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.5)),
-                    ),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.network(
-                            referencedPlace.heroImage,
-                            width: 40,
-                            height: 40,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                referencedPlace.name,
-                                style: GoogleFonts.marcellus(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppTheme.accentGoldLight,
-                                ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              msg.linkedPlace!.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.marcellus(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.accentGoldLight,
                               ),
-                              Text(
-                                'Tap to explore details & map',
-                                style: GoogleFonts.outfit(fontSize: 10, color: AppTheme.textMuted),
-                              ),
-                            ],
-                          ),
+                            ),
+                            Text(
+                              'Explore Chronicle & Audio Guide →',
+                              style: GoogleFonts.outfit(fontSize: 10, color: AppTheme.accentGold),
+                            ),
+                          ],
                         ),
-                        const Icon(Icons.arrow_forward_ios, color: AppTheme.accentGold, size: 12),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ],
-          ),
+          ],
         ),
-      );
-    }
+      ),
+    );
   }
+}
+
+class ChatMessage {
+  final String text;
+  final bool isUser;
+  final DateTime timestamp;
+  final HeritagePlace? linkedPlace;
+
+  ChatMessage({
+    required this.text,
+    required this.isUser,
+    required this.timestamp,
+    this.linkedPlace,
+  });
 }

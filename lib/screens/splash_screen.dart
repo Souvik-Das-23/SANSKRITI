@@ -70,16 +70,16 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // Subtle radial ambient background glow
+          // Background subtle radiant glow
           Center(
             child: Container(
-              width: 350,
-              height: 350,
+              width: 320,
+              height: 320,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    AppTheme.accentGold.withValues(alpha: 0.12),
+                    AppTheme.accentGold.withValues(alpha: 0.15),
                     Colors.transparent,
                   ],
                 ),
@@ -93,93 +93,88 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               child: ScaleTransition(
                 scale: _scaleAnimation,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Royal Golden Medallion Icon
+                    // Royal Emblem with Gold Borders
                     Container(
-                      padding: const EdgeInsets.all(24),
+                      width: 100,
+                      height: 100,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        gradient: AppTheme.darkCardGradient,
-                        border: Border.all(color: AppTheme.accentGold, width: 2),
+                        gradient: AppTheme.goldGradient,
                         boxShadow: [
                           BoxShadow(
-                            color: AppTheme.accentGold.withValues(alpha: 0.3),
+                            color: AppTheme.accentGold.withValues(alpha: 0.4),
                             blurRadius: 28,
                             spreadRadius: 4,
                           ),
                         ],
                       ),
-                      child: const Icon(
-                        Icons.account_balance,
-                        size: 70,
-                        color: AppTheme.accentGold,
+                      child: Center(
+                        child: Container(
+                          width: 86,
+                          height: 86,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppTheme.backgroundDark,
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.account_balance,
+                              size: 42,
+                              color: AppTheme.accentGold,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 28),
 
-                    // Sanskrit Title Shloka
+                    // Sanskrit Shloka
                     Text(
                       '॥ वसुधैव कुटुम्बकम् ॥',
                       style: GoogleFonts.rozhaOne(
-                        fontSize: 16,
-                        color: AppTheme.accentGold.withValues(alpha: 0.8),
-                        letterSpacing: 2.0,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-
-                    // App Name
-                    Text(
-                      'Sanskriti',
-                      style: GoogleFonts.cinzel(
-                        fontSize: 42,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.accentGoldLight,
-                        letterSpacing: 3.0,
+                        fontSize: 20,
+                        color: AppTheme.accentGold,
+                        letterSpacing: 1.5,
                       ),
                     ),
                     const SizedBox(height: 8),
+
+                    // App Title
+                    Text(
+                      'Sanskriti',
+                      style: GoogleFonts.cinzel(
+                        fontSize: 38,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.accentGoldLight,
+                        letterSpacing: 4.0,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
 
                     // Tagline
                     Text(
                       'Discover India\'s Rich Heritage',
                       style: GoogleFonts.outfit(
-                        fontSize: 14,
-                        color: AppTheme.textMuted,
-                        letterSpacing: 1.5,
+                        fontSize: 13,
                         fontWeight: FontWeight.w400,
+                        color: AppTheme.textMuted,
+                        letterSpacing: 1.2,
                       ),
                     ),
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 48),
 
-                    // Subtle Golden Loader
+                    // Golden Progress Indicator
                     const SizedBox(
-                      width: 28,
-                      height: 28,
+                      width: 24,
+                      height: 24,
                       child: CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation<Color>(AppTheme.accentGold),
-                        strokeWidth: 2,
+                        strokeWidth: 2.2,
                       ),
                     ),
                   ],
-                ),
-              ),
-            ),
-          ),
-
-          // Bottom Footer
-          Positioned(
-            bottom: 24,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Text(
-                'A Digital Cultural Tourism Platform',
-                style: GoogleFonts.outfit(
-                  fontSize: 11,
-                  color: AppTheme.accentGoldDark,
-                  letterSpacing: 1.0,
                 ),
               ),
             ),

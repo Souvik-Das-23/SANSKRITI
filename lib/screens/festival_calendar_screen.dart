@@ -1,8 +1,8 @@
-// lib/screens/festival_calendar_screen.dart
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../app_theme.dart';
 import '../data/festival_repository.dart';
+import '../models/festival.dart';
 import '../services/favorites_service.dart';
 
 class FestivalCalendarScreen extends StatefulWidget {
@@ -14,52 +14,65 @@ class FestivalCalendarScreen extends StatefulWidget {
 
 class _FestivalCalendarScreenState extends State<FestivalCalendarScreen> {
   String _selectedRegion = 'All';
+  List<Festival> _festivals = [];
   final FavoritesService _favService = FavoritesService();
 
-  final List<String> _regions = [
-    'All',
-    'East India',
-    'South India',
-    'West India',
-    'Pan India',
-  ];
+  final List<String> _regions = ['All', 'East', 'North', 'South', 'West', 'Central'];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFestivals();
+  }
+
+  void _loadFestivals() {
+    setState(() {
+      _festivals = FestivalRepository.getFestivalsByRegion(_selectedRegion);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final festivals = FestivalRepository.getFestivalsByRegion(_selectedRegion);
-
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,
       appBar: AppBar(
-        title: const Text('Indian Festival Calendar 2026'),
+        title: const Text('FESTIVAL CALENDAR 2026'),
       ),
       body: Column(
         children: [
-          // Region Filter
+          // Region Filter Chips
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
               child: Row(
                 children: _regions.map((region) {
-                  bool isSel = _selectedRegion == region;
+                  bool isSelected = _selectedRegion == region;
                   return GestureDetector(
-                    onTap: () => setState(() => _selectedRegion = region),
+                    onTap: () {
+                      setState(() {
+                        _selectedRegion = region;
+                        _loadFestivals();
+                      });
+                    },
                     child: Container(
                       margin: const EdgeInsets.only(right: 8),
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
-                        gradient: isSel ? AppTheme.goldGradient : null,
-                        color: isSel ? null : AppTheme.cardDark,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: isSel ? AppTheme.accentGold : Colors.white12),
+                        gradient: isSelected ? AppTheme.goldGradient : null,
+                        color: isSelected ? null : AppTheme.cardDark,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: isSelected ? AppTheme.accentGold : AppTheme.accentGold.withValues(alpha: 0.2),
+                        ),
                       ),
                       child: Text(
                         region,
                         style: GoogleFonts.outfit(
                           fontSize: 12,
-                          fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
-                          color: isSel ? AppTheme.backgroundDark : AppTheme.textLight,
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                          color: isSelected ? AppTheme.backgroundDark : AppTheme.textLight,
                         ),
                       ),
                     ),
@@ -69,238 +82,201 @@ class _FestivalCalendarScreenState extends State<FestivalCalendarScreen> {
             ),
           ),
 
-          // List of Festivals
+          // Festival Cards List
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: festivals.length,
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 30),
+              physics: const BouncingScrollPhysics(),
+              itemCount: _festivals.length,
               itemBuilder: (context, index) {
-                final festival = festivals[index];
-                final isSaved = _favService.isFestivalSaved(festival.id);
+                final fest = _festivals[index];
+                final isReminded = _favService.isFestivalReminded(fest.id);
 
                 return Container(
-                  margin: const EdgeInsets.only(bottom: 20),
+                  margin: const EdgeInsets.only(bottom: 18),
                   decoration: BoxDecoration(
-                    color: AppTheme.cardDark,
-                    borderRadius: BorderRadius.circular(22),
+                    gradient: AppTheme.glassCardGradient,
+                    borderRadius: BorderRadius.circular(24),
                     border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.3)),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.5),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
+                        color: Colors.black.withValues(alpha: 0.4),
+                        blurRadius: 14,
+                        offset: const Offset(0, 5),
                       ),
                     ],
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Festival Hero Image with Dates Pill
-                      Stack(
-                        children: [
-                          ClipRRect(
-                            borderRadius: const BorderRadius.vertical(top: Radius.circular(21)),
-                            child: Image.network(
-                              festival.image,
-                              height: 190,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) => Container(
-                                height: 190,
-                                color: AppTheme.surfaceDark,
-                                child: const Icon(Icons.celebration, color: AppTheme.accentGold, size: 48),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(23),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Header Image with overlay
+                        SizedBox(
+                          height: 170,
+                          width: double.infinity,
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              Image.network(
+                                fest.image,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) => Container(color: AppTheme.cardDark),
                               ),
-                            ),
-                          ),
-                          Container(
-                            height: 190,
-                            decoration: const BoxDecoration(
-                              gradient: AppTheme.heroOverlayGradient,
-                              borderRadius: BorderRadius.vertical(top: Radius.circular(21)),
-                            ),
-                          ),
-                          Positioned(
-                            top: 14,
-                            left: 14,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.75),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.6)),
+                              Container(
+                                decoration: const BoxDecoration(
+                                  gradient: AppTheme.heroOverlayGradient,
+                                ),
                               ),
-                              child: Row(
+                              Positioned(
+                                top: 12,
+                                left: 12,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withValues(alpha: 0.6),
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.4)),
+                                  ),
+                                  child: Text(
+                                    '${fest.region} • ${fest.state}',
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppTheme.accentGoldLight,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 12,
+                                right: 12,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _favService.toggleFestivalReminder(fest);
+                                    });
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          isReminded
+                                              ? 'Reminder removed for ${fest.name}'
+                                              : 'Festival alert set for ${fest.name} (${fest.dates})!',
+                                          style: GoogleFonts.outfit(),
+                                        ),
+                                        backgroundColor: AppTheme.surfaceDark,
+                                        duration: const Duration(seconds: 2),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: isReminded ? AppTheme.accentGold : Colors.black.withValues(alpha: 0.6),
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: AppTheme.accentGold),
+                                    ),
+                                    child: Icon(
+                                      isReminded ? Icons.notifications_active : Icons.notifications_none,
+                                      color: isReminded ? AppTheme.backgroundDark : AppTheme.accentGold,
+                                      size: 18,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 12,
+                                left: 16,
+                                right: 16,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      fest.name,
+                                      style: GoogleFonts.marcellus(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppTheme.accentGoldLight,
+                                      ),
+                                    ),
+                                    Text(
+                                      fest.hindiName,
+                                      style: GoogleFonts.rozhaOne(
+                                        fontSize: 14,
+                                        color: AppTheme.accentGold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // Body details
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Date Pill
+                              Row(
                                 children: [
-                                  const Icon(Icons.calendar_today, color: AppTheme.accentGold, size: 12),
+                                  const Icon(Icons.calendar_today, color: AppTheme.accentGold, size: 14),
                                   const SizedBox(width: 6),
                                   Text(
-                                    festival.dates,
+                                    fest.dates,
                                     style: GoogleFonts.outfit(
-                                      color: AppTheme.accentGoldLight,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 11,
+                                      color: AppTheme.accentGoldLight,
+                                      fontSize: 13,
                                     ),
+                                  ),
+                                  const Spacer(),
+                                  Text(
+                                    'Duration: ${fest.duration}',
+                                    style: GoogleFonts.outfit(color: AppTheme.textMuted, fontSize: 11),
                                   ),
                                 ],
                               ),
-                            ),
-                          ),
-                          Positioned(
-                            top: 14,
-                            right: 14,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: AppTheme.surfaceDark.withValues(alpha: 0.8),
-                                borderRadius: BorderRadius.circular(10),
+                              const SizedBox(height: 10),
+                              Text(
+                                fest.significance,
+                                style: GoogleFonts.outfit(fontSize: 13, height: 1.45, color: AppTheme.textLight),
                               ),
-                              child: Text(
-                                festival.duration,
-                                style: GoogleFonts.outfit(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 12,
-                            left: 14,
-                            right: 14,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  festival.name,
-                                  style: GoogleFonts.marcellus(
-                                    color: AppTheme.accentGoldLight,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  festival.hindiName,
-                                  style: GoogleFonts.rozhaOne(
-                                    color: AppTheme.accentGold,
-                                    fontSize: 13,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                              const SizedBox(height: 12),
 
-                      // Festival Content Body
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                const Icon(Icons.location_on, color: AppTheme.accentGold, size: 16),
-                                const SizedBox(width: 4),
-                                Expanded(
+                              // Festive Delicacies (Bhog)
+                              Text(
+                                'Festive Delicacies & Bhog:',
+                                style: GoogleFonts.cinzel(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.accentGold,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Wrap(
+                                spacing: 6,
+                                runSpacing: 6,
+                                children: fest.culinarySpecialties.map((dish) => Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.surfaceDark,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.2)),
+                                  ),
                                   child: Text(
-                                    festival.state,
-                                    style: GoogleFonts.outfit(color: AppTheme.textLight, fontSize: 12, fontWeight: FontWeight.w600),
+                                    '🍲 $dish',
+                                    style: GoogleFonts.outfit(fontSize: 11, color: AppTheme.textLight),
                                   ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              festival.significance,
-                              style: GoogleFonts.outfit(color: AppTheme.textLight, fontSize: 13, height: 1.4),
-                            ),
-                            const SizedBox(height: 14),
-
-                            // Rituals
-                            Text(
-                              'Rituals & Traditions:',
-                              style: GoogleFonts.outfit(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: AppTheme.accentGold,
+                                )).toList(),
                               ),
-                            ),
-                            const SizedBox(height: 6),
-                            ...festival.rituals.map((r) => Padding(
-                              padding: const EdgeInsets.only(bottom: 4.0),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('🪔 ', style: TextStyle(fontSize: 12)),
-                                  Expanded(
-                                    child: Text(
-                                      r,
-                                      style: GoogleFonts.outfit(fontSize: 12, color: AppTheme.textMuted),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )),
-                            const SizedBox(height: 14),
-
-                            // Culinary Delicacies
-                            Text(
-                              'Festive Delicacies & Prasad:',
-                              style: GoogleFonts.outfit(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: AppTheme.accentGold,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Wrap(
-                              spacing: 6,
-                              runSpacing: 6,
-                              children: festival.culinarySpecialties.map((food) => Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: AppTheme.surfaceDark,
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(color: Colors.white12),
-                                ),
-                                child: Text(
-                                  '🍲 $food',
-                                  style: GoogleFonts.outfit(fontSize: 11, color: AppTheme.textLight),
-                                ),
-                              )).toList(),
-                            ),
-                            const SizedBox(height: 16),
-
-                            // Reminder Action Button
-                            ElevatedButton.icon(
-                              onPressed: () {
-                                setState(() {
-                                  _favService.toggleFestivalSaved(festival);
-                                });
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      isSaved
-                                          ? 'Removed reminder for ${festival.name}'
-                                          : 'Reminder set for ${festival.name} (${festival.dates})!',
-                                    ),
-                                    backgroundColor: AppTheme.accentGold,
-                                  ),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: isSaved ? AppTheme.cardDarkElevated : AppTheme.accentGold,
-                                foregroundColor: isSaved ? AppTheme.accentGold : AppTheme.backgroundDark,
-                                side: isSaved ? const BorderSide(color: AppTheme.accentGold) : null,
-                                minimumSize: const Size(double.infinity, 40),
-                              ),
-                              icon: Icon(isSaved ? Icons.notifications_active : Icons.notifications_none, size: 18),
-                              label: Text(
-                                isSaved ? 'REMINDER ACTIVE' : 'SET FESTIVAL REMINDER',
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },

@@ -1,9 +1,11 @@
 // lib/screens/home_screen.dart
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../app_theme.dart';
 import '../data/heritage_repository.dart';
 import '../models/heritage_place.dart';
+import '../services/favorites_service.dart';
 import '../services/location_service.dart';
 import '../widgets/audio_guide_bottom_sheet.dart';
 import '../widgets/heritage_card.dart';
@@ -23,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<HeritagePlace> _displayedPlaces = [];
   bool _isLoadingLocation = false;
+  final FavoritesService _favService = FavoritesService();
 
   final List<String> _states = [
     'All',
@@ -45,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _loadPlaces() {
-    var places = HeritageRepository.getAllPlaces();
+    var places = List<HeritagePlace>.from(HeritageRepository.getAllPlaces());
     if (_selectedCategory != HeritageCategory.all) {
       places = places.where((p) => p.category == _selectedCategory).toList();
     }
@@ -79,7 +82,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final spotlightPlace = HeritageRepository.getAllPlaces().first; // Taj Mahal or Hampi
+    final allPlaces = HeritageRepository.getAllPlaces();
+    final spotlightPlace = allPlaces.first; // Taj Mahal
 
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,
@@ -89,11 +93,12 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: AppTheme.surfaceDark,
           onRefresh: _refreshLocationAndDistances,
           child: CustomScrollView(
+            physics: const BouncingScrollPhysics(),
             slivers: [
-              // 1. Royal App Bar / Greeting
+              // 1. Ultra-Aesthetic Top Header
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(18, 16, 18, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -102,18 +107,29 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Row(
                             children: [
-                              Text(
-                                'नमस्ते ',
-                                style: GoogleFonts.rozhaOne(
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
                                   color: AppTheme.accentGold,
-                                  fontSize: 16,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: AppTheme.accentGold,
+                                      blurRadius: 6,
+                                      spreadRadius: 1,
+                                    ),
+                                  ],
                                 ),
                               ),
+                              const SizedBox(width: 6),
                               Text(
-                                '• Welcome to India',
+                                'EXPLORING INDIA',
                                 style: GoogleFonts.outfit(
-                                  color: AppTheme.textMuted,
-                                  fontSize: 13,
+                                  color: AppTheme.accentGoldLight,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.2,
                                 ),
                               ),
                             ],
@@ -122,53 +138,86 @@ class _HomeScreenState extends State<HomeScreen> {
                           Text(
                             'Sanskriti',
                             style: GoogleFonts.cinzel(
-                              fontSize: 28,
+                              fontSize: 30,
                               fontWeight: FontWeight.bold,
                               color: AppTheme.accentGoldLight,
-                              letterSpacing: 1.5,
+                              letterSpacing: 2.0,
                             ),
                           ),
                         ],
                       ),
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: AppTheme.cardDark,
-                                shape: BoxShape.circle,
-                                border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.3)),
-                              ),
-                              child: const Icon(Icons.favorite, color: AppTheme.crimsonRed, size: 18),
+                      // Saved bookmarks button with badge
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const FavoritesScreen()),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            gradient: AppTheme.glassCardGradient,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: AppTheme.accentGold.withValues(alpha: 0.35),
+                              width: 1.0,
                             ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => const FavoritesScreen()),
-                              );
-                            },
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.4),
+                                blurRadius: 8,
+                              ),
+                            ],
                           ),
-                        ],
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              const Icon(Icons.bookmark_outline, color: AppTheme.accentGold, size: 20),
+                              if (_favService.favoritePlaceIds.isNotEmpty)
+                                Positioned(
+                                  right: -4,
+                                  top: -4,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(3),
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: AppTheme.crimsonRed,
+                                    ),
+                                    constraints: const BoxConstraints(minWidth: 14, minHeight: 14),
+                                    child: Center(
+                                      child: Text(
+                                        '${_favService.favoritePlaceIds.length}',
+                                        style: const TextStyle(fontSize: 8, color: Colors.white, fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
 
-              // 2. Search Bar
+              // 2. Modern Glassmorphic Search Bar
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(18, 16, 18, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 18, 20, 0),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: AppTheme.cardDark,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.3)),
+                      gradient: AppTheme.glassCardGradient,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: AppTheme.accentGold.withValues(alpha: 0.3),
+                        width: 1.0,
+                      ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.3),
-                          blurRadius: 10,
+                          color: Colors.black.withValues(alpha: 0.4),
+                          blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),
                       ],
@@ -178,9 +227,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       onChanged: (_) => _loadPlaces(),
                       style: GoogleFonts.outfit(color: AppTheme.textLight, fontSize: 14),
                       decoration: InputDecoration(
-                        hintText: 'Search forts, temples, caves, dynasties...',
+                        hintText: 'Search monuments, temples, dynasties...',
                         hintStyle: GoogleFonts.outfit(color: AppTheme.textMuted, fontSize: 13),
-                        prefixIcon: const Icon(Icons.search, color: AppTheme.accentGold, size: 20),
+                        prefixIcon: const Icon(Icons.search, color: AppTheme.accentGold, size: 22),
                         suffixIcon: _searchController.text.isNotEmpty
                             ? IconButton(
                                 icon: const Icon(Icons.clear, color: AppTheme.textMuted, size: 18),
@@ -189,7 +238,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                   _loadPlaces();
                                 },
                               )
-                            : null,
+                            : Container(
+                                margin: const EdgeInsets.all(8),
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: AppTheme.surfaceDark,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.2)),
+                                ),
+                                child: const Icon(Icons.tune, color: AppTheme.accentGold, size: 16),
+                              ),
                         border: InputBorder.none,
                         contentPadding: const EdgeInsets.symmetric(vertical: 14),
                       ),
@@ -198,11 +256,77 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-              // 3. Featured Spotlight Card
+              // 3. Heritage Stories Horizon Row
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                  child: SizedBox(
+                    height: 96,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: allPlaces.take(6).length,
+                      itemBuilder: (context, index) {
+                        final place = allPlaces[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => DetailsScreen(place: place)),
+                            );
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 6),
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(2.5),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: AppTheme.goldGradient,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppTheme.accentGold.withValues(alpha: 0.25),
+                                        blurRadius: 8,
+                                      ),
+                                    ],
+                                  ),
+                                  child: CircleAvatar(
+                                    radius: 28,
+                                    backgroundImage: NetworkImage(place.heroImage),
+                                    backgroundColor: AppTheme.surfaceDark,
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                SizedBox(
+                                  width: 68,
+                                  child: Text(
+                                    place.name.split(' ')[0],
+                                    textAlign: TextAlign.center,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppTheme.accentGoldLight,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+
+              // 4. Spotlight of the Day Card
               if (_searchController.text.isEmpty && _selectedCategory == HeritageCategory.all && _selectedState == 'All')
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(18, 20, 18, 0),
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -210,20 +334,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'HERITAGE SPOTLIGHT OF THE DAY',
+                              'SPOTLIGHT OF THE WEEK',
                               style: GoogleFonts.cinzel(
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
                                 color: AppTheme.accentGold,
-                                letterSpacing: 1.0,
+                                letterSpacing: 1.2,
                               ),
                             ),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                               decoration: BoxDecoration(
                                 color: AppTheme.accentGold.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.5)),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.4)),
                               ),
                               child: Text(
                                 'Featured',
@@ -237,31 +361,32 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         const SizedBox(height: 10),
-                        _buildSpotlightCard(context, spotlightPlace),
+                        _buildSpotlightHeroCard(context, spotlightPlace),
                       ],
                     ),
                   ),
                 ),
 
-              // 4. Category Filter Chips
+              // 5. Category Filter Chips
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(18, 22, 18, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'EXPLORE BY CATEGORY',
+                        'EXPLORE HERITAGE',
                         style: GoogleFonts.cinzel(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
                           color: AppTheme.accentGold,
-                          letterSpacing: 1.0,
+                          letterSpacing: 1.2,
                         ),
                       ),
                       const SizedBox(height: 10),
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
+                        physics: const BouncingScrollPhysics(),
                         child: Row(
                           children: HeritageCategory.values.map((category) {
                             bool isSelected = _selectedCategory == category;
@@ -274,25 +399,35 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                               child: Container(
                                 margin: const EdgeInsets.only(right: 10),
-                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
                                 decoration: BoxDecoration(
                                   gradient: isSelected ? AppTheme.goldGradient : null,
                                   color: isSelected ? null : AppTheme.cardDark,
                                   borderRadius: BorderRadius.circular(20),
                                   border: Border.all(
                                     color: isSelected ? AppTheme.accentGold : AppTheme.accentGold.withValues(alpha: 0.2),
+                                    width: 1.0,
                                   ),
+                                  boxShadow: isSelected
+                                      ? [
+                                          BoxShadow(
+                                            color: AppTheme.accentGold.withValues(alpha: 0.25),
+                                            blurRadius: 10,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ]
+                                      : null,
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text(category.iconName, style: const TextStyle(fontSize: 14)),
+                                    Text(category.iconName, style: const TextStyle(fontSize: 13)),
                                     const SizedBox(width: 6),
                                     Text(
                                       category.displayName,
                                       style: GoogleFonts.outfit(
                                         fontSize: 12,
-                                        fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                                        fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
                                         color: isSelected ? AppTheme.backgroundDark : AppTheme.textLight,
                                       ),
                                     ),
@@ -308,12 +443,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-              // 5. State / Region Chips
+              // 6. State Filter Chips
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(18, 14, 18, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
                     child: Row(
                       children: _states.map((st) {
                         bool isSelected = _selectedState == st;
@@ -350,15 +486,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-              // 6. Section Header
+              // 7. Results Section Header
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(18, 22, 18, 12),
+                  padding: const EdgeInsets.fromLTRB(20, 22, 20, 12),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'HERITAGE DESTINATIONS (${_displayedPlaces.length})',
+                        'DESTINATIONS (${_displayedPlaces.length})',
                         style: GoogleFonts.cinzel(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
@@ -377,7 +513,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-              // 7. Masonry / 2-Column Staggered Grid
+              // 8. Staggered Grid
               if (_displayedPlaces.isEmpty)
                 SliverToBoxAdapter(
                   child: Padding(
@@ -399,13 +535,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               else
                 SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   sliver: SliverToBoxAdapter(
                     child: _buildStaggeredMasonryGrid(),
                   ),
                 ),
 
-              const SliverToBoxAdapter(child: SizedBox(height: 80)),
+              const SliverToBoxAdapter(child: SizedBox(height: 90)),
             ],
           ),
         ),
@@ -413,7 +549,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildSpotlightCard(BuildContext context, HeritagePlace place) {
+  Widget _buildSpotlightHeroCard(BuildContext context, HeritagePlace place) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -422,20 +558,20 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
       child: Container(
-        height: 220,
+        height: 230,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(22),
-          border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.5), width: 1.5),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.45), width: 1.2),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.6),
-              blurRadius: 14,
+              blurRadius: 16,
               offset: const Offset(0, 6),
             ),
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(21),
+          borderRadius: BorderRadius.circular(23),
           child: Stack(
             fit: StackFit.expand,
             children: [
@@ -448,61 +584,75 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: const BoxDecoration(gradient: AppTheme.heroOverlayGradient),
               ),
               Positioned(
-                bottom: 16,
-                left: 16,
-                right: 16,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
+                bottom: 14,
+                left: 14,
+                right: 14,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(18),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.45),
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.25), width: 0.8),
+                      ),
+                      child: Row(
                         children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                            margin: const EdgeInsets.only(bottom: 6),
-                            decoration: BoxDecoration(
-                              color: AppTheme.accentGold,
-                              borderRadius: BorderRadius.circular(8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Icon(Icons.stars, color: AppTheme.accentGoldShimmer, size: 12),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'UNESCO WORLD HERITAGE',
+                                      style: GoogleFonts.outfit(
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppTheme.accentGoldLight,
+                                        letterSpacing: 1.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  place.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.marcellus(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppTheme.accentGoldLight,
+                                  ),
+                                ),
+                                Text(
+                                  place.location,
+                                  style: GoogleFonts.outfit(fontSize: 12, color: AppTheme.textMuted),
+                                ),
+                              ],
                             ),
-                            child: Text(
-                              'MONUMENT OF ETERNAL SPLENDOR',
-                              style: GoogleFonts.outfit(
-                                fontSize: 9,
-                                fontWeight: FontWeight.bold,
-                                color: AppTheme.backgroundDark,
-                                letterSpacing: 0.8,
+                          ),
+                          GestureDetector(
+                            onTap: () => AudioGuideBottomSheet.show(context, place),
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: AppTheme.goldGradient,
                               ),
+                              child: const Icon(Icons.headphones, color: AppTheme.backgroundDark, size: 20),
                             ),
-                          ),
-                          Text(
-                            place.name,
-                            style: GoogleFonts.marcellus(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.accentGoldLight,
-                            ),
-                          ),
-                          Text(
-                            place.location,
-                            style: GoogleFonts.outfit(fontSize: 12, color: Colors.white70),
                           ),
                         ],
                       ),
                     ),
-                    IconButton(
-                      icon: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: AppTheme.goldGradient,
-                        ),
-                        child: const Icon(Icons.headphones, color: AppTheme.backgroundDark, size: 20),
-                      ),
-                      onPressed: () => AudioGuideBottomSheet.show(context, place),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ],

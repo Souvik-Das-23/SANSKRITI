@@ -1,4 +1,5 @@
 // lib/widgets/audio_guide_bottom_sheet.dart
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../app_theme.dart';
@@ -51,19 +52,23 @@ class _AudioGuideBottomSheetState extends State<AudioGuideBottomSheet> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.surfaceDark,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        color: AppTheme.surfaceGlass,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
         border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.4), width: 1.5),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.7),
-            blurRadius: 20,
+            blurRadius: 25,
             spreadRadius: 5,
           ),
         ],
       ),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      child: SafeArea(
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+          child: SafeArea(
         top: false,
         child: SingleChildScrollView(
           child: Column(
@@ -352,6 +357,8 @@ class _AudioGuideBottomSheetState extends State<AudioGuideBottomSheet> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  ),
+);
+}
 }

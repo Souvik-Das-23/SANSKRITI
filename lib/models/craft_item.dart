@@ -47,6 +47,8 @@ class CraftItem {
   final String makingTime;
   final String artisanContactInfo;
 
+  String get name => title;
+
   CraftItem({
     required this.id,
     required this.title,

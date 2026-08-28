@@ -1,12 +1,8 @@
-// lib/screens/services_screen.dart
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../app_theme.dart';
-import '../data/heritage_repository.dart';
-import '../widgets/audio_guide_bottom_sheet.dart';
 import '../widgets/sos_dialog.dart';
 import 'ai_assistant_screen.dart';
-import 'favorites_screen.dart';
 import 'festival_calendar_screen.dart';
 import 'kala_bazaar_screen.dart';
 import 'quiz_screen.dart';
@@ -19,230 +15,162 @@ class ServicesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,
-      appBar: AppBar(
-        title: const Text('Cultural Services Hub'),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(18.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Top Royal Welcome Banner
-            Container(
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                gradient: AppTheme.darkCardGradient,
-                borderRadius: BorderRadius.circular(22),
-                border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.4), width: 1.5),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.5),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Text(
+                'CULTURAL SERVICES',
+                style: GoogleFonts.outfit(
+                  color: AppTheme.accentGold,
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.4,
+                ),
               ),
-              child: Row(
+              const SizedBox(height: 2),
+              Text(
+                'Services Ecosystem',
+                style: GoogleFonts.cinzel(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.accentGoldLight,
+                  letterSpacing: 1.2,
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Modern Bento Grid
+              Row(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(14),
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: AppTheme.goldGradient,
+                  Expanded(
+                    child: _buildBentoCard(
+                      context,
+                      title: 'Festival Calendar',
+                      subtitle: 'Rituals, Delicacies & Reminders',
+                      icon: Icons.celebration,
+                      gradient: const [Color(0xFFE67E22), Color(0xFFD35400)],
+                      height: 160,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const FestivalCalendarScreen()),
+                      ),
                     ),
-                    child: const Icon(Icons.temple_hindu, color: AppTheme.backgroundDark, size: 28),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Sanskriti Tourism Ecosystem',
-                          style: GoogleFonts.marcellus(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.accentGoldLight,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          'Explore heritage ticketing, festive calendars, audio tours, authentic crafts, and AI assistance.',
-                          style: GoogleFonts.outfit(fontSize: 12, color: AppTheme.textMuted, height: 1.4),
-                        ),
-                      ],
+                    child: _buildBentoCard(
+                      context,
+                      title: 'E-Passes & Tickets',
+                      subtitle: 'ASI Passes & Digital QR Passes',
+                      icon: Icons.confirmation_number_outlined,
+                      gradient: const [Color(0xFF27AE60), Color(0xFF1E8449)],
+                      height: 160,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const TicketBookingScreen()),
+                      ),
                     ),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 24),
+              const SizedBox(height: 14),
 
-            Text(
-              'EXPERIENCES & SERVICES',
-              style: GoogleFonts.cinzel(
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-                color: AppTheme.accentGold,
-                letterSpacing: 1.0,
+              // Featured Wide Bento Card: Kala Bazaar
+              _buildWideBentoCard(
+                context,
+                title: 'Kala Bazaar (Artisans & Crafts)',
+                subtitle: 'Discover authentic GI-tagged handicrafts direct from rural Indian master craftsmen.',
+                tag: 'GI-TAGGED AUTHENTIC',
+                icon: Icons.storefront,
+                gradient: AppTheme.goldGradient,
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const KalaBazaarScreen()),
+                ),
               ),
-            ),
-            const SizedBox(height: 14),
+              const SizedBox(height: 14),
 
-            // 2x4 Grid of Services
-            GridView.count(
-              crossAxisCount: 2,
-              crossAxisSpacing: 14,
-              mainAxisSpacing: 14,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              childAspectRatio: 1.05,
-              children: [
-                // 1. Festival Calendar
-                _buildServiceTile(
-                  context,
-                  title: 'Festival\nCalendar',
-                  subtitle: 'Traditions & Dates',
-                  icon: Icons.celebration,
-                  badgeText: 'Live 2026',
-                  onTap: () {
-                    Navigator.push(
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildBentoCard(
                       context,
-                      MaterialPageRoute(builder: (context) => const FestivalCalendarScreen()),
-                    );
-                  },
-                ),
-
-                // 2. Heritage Monument Passes
-                _buildServiceTile(
-                  context,
-                  title: 'Heritage\nTickets & Passes',
-                  subtitle: 'Fast-Track Entry',
-                  icon: Icons.confirmation_number_outlined,
-                  badgeText: 'Instant QR',
-                  onTap: () {
-                    Navigator.push(
+                      title: 'Veda AI Assistant',
+                      subtitle: 'Historical chronicles & 3-Day itineraries',
+                      icon: Icons.auto_awesome,
+                      gradient: const [Color(0xFF8E44AD), Color(0xFF6C3483)],
+                      height: 160,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const AiAssistantScreen()),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: _buildBentoCard(
                       context,
-                      MaterialPageRoute(builder: (context) => const TicketBookingScreen()),
-                    );
-                  },
-                ),
+                      title: 'Heritage Trivia Quiz',
+                      subtitle: 'Earn Royal Scholar Certificates',
+                      icon: Icons.school,
+                      gradient: const [Color(0xFF2980B9), Color(0xFF1F618D)],
+                      height: 160,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const QuizScreen()),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
 
-                // 3. Kala Bazaar
-                _buildServiceTile(
-                  context,
-                  title: 'Kala\nBazaar',
-                  subtitle: 'GI-Tagged Handicrafts',
-                  icon: Icons.storefront,
-                  badgeText: 'Artisans',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const KalaBazaarScreen()),
-                    );
-                  },
+              // SOS Pilgrim Safety Card
+              _buildWideBentoCard(
+                context,
+                title: 'Off-Grid Pilgrim SOS Beacon',
+                subtitle: 'Broadcast emergency GPS coordinates and connect directly with 112 Police & 1363 Tourism Helpline.',
+                tag: 'SAFETY & EMERGENCY',
+                icon: Icons.shield,
+                isEmergency: true,
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFC0392B), Color(0xFF922B21)],
                 ),
-
-                // 4. Sanskriti AI / Veda Assistant
-                _buildServiceTile(
-                  context,
-                  title: 'Veda AI\nAssistant',
-                  subtitle: 'Heritage Q&A & Trails',
-                  icon: Icons.auto_awesome,
-                  badgeText: 'Smart Guide',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const AiAssistantScreen()),
-                    );
-                  },
-                ),
-
-                // 5. Audio Guides Portal
-                _buildServiceTile(
-                  context,
-                  title: 'Audio Tour\nGuides',
-                  subtitle: 'Narrations & Music',
-                  icon: Icons.headphones,
-                  badgeText: 'Multi-Lingual',
-                  onTap: () {
-                    final firstPlace = HeritageRepository.getAllPlaces().first;
-                    AudioGuideBottomSheet.show(context, firstPlace);
-                  },
-                ),
-
-                // 6. Heritage Trivia Quiz
-                _buildServiceTile(
-                  context,
-                  title: 'Heritage\nTrivia Quiz',
-                  subtitle: 'Earn Explorer Badges',
-                  icon: Icons.quiz,
-                  badgeText: 'Interactive',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const QuizScreen()),
-                    );
-                  },
-                ),
-
-                // 7. Off-Grid SOS
-                _buildServiceTile(
-                  context,
-                  title: 'Off-Grid\nSOS Beacon',
-                  subtitle: 'Pilgrim Safety',
-                  icon: Icons.emergency_share,
-                  badgeText: 'Emergency',
-                  isRed: true,
-                  onTap: () => SosDialog.show(context),
-                ),
-
-                // 8. Saved Favorites
-                _buildServiceTile(
-                  context,
-                  title: 'Saved\nTreasures',
-                  subtitle: 'Bookmarks & Alerts',
-                  icon: Icons.favorite,
-                  badgeText: 'Personal',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const FavoritesScreen()),
-                    );
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 30),
-          ],
+                onTap: () => SosDialog.show(context),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildServiceTile(
+  Widget _buildBentoCard(
     BuildContext context, {
     required String title,
     required String subtitle,
     required IconData icon,
-    required String badgeText,
+    required List<Color> gradient,
+    required double height,
     required VoidCallback onTap,
-    bool isRed = false,
   }) {
-    final borderColor = isRed ? AppTheme.crimsonRed : AppTheme.accentGold.withValues(alpha: 0.3);
-    final iconColor = isRed ? AppTheme.crimsonRed : AppTheme.accentGold;
-
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(14),
+        height: height,
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppTheme.cardDark,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: borderColor, width: 1.2),
+          gradient: AppTheme.glassCardGradient,
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.28)),
           boxShadow: [
             BoxShadow(
-              color: isRed ? AppTheme.crimsonRed.withValues(alpha: 0.15) : Colors.black.withValues(alpha: 0.4),
+              color: Colors.black.withValues(alpha: 0.4),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -250,52 +178,145 @@ class ServicesScreen extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(colors: gradient),
+                boxShadow: [
+                  BoxShadow(
+                    color: gradient.first.withValues(alpha: 0.4),
+                    blurRadius: 8,
+                  ),
+                ],
+              ),
+              child: Icon(icon, color: Colors.white, size: 20),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: AppTheme.surfaceDark,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: iconColor.withValues(alpha: 0.5)),
+                Text(
+                  title,
+                  style: GoogleFonts.marcellus(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.accentGoldLight,
                   ),
-                  child: Icon(icon, color: iconColor, size: 20),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: isRed ? AppTheme.crimsonRed.withValues(alpha: 0.2) : AppTheme.accentGold.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    badgeText,
-                    style: GoogleFonts.outfit(
-                      fontSize: 9,
-                      fontWeight: FontWeight.bold,
-                      color: isRed ? AppTheme.crimsonRed : AppTheme.accentGoldLight,
-                    ),
+                const SizedBox(height: 3),
+                Text(
+                  subtitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.outfit(
+                    fontSize: 11,
+                    color: AppTheme.textMuted,
+                    height: 1.3,
                   ),
                 ),
               ],
             ),
-            const Spacer(),
-            Text(
-              title,
-              style: GoogleFonts.marcellus(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: AppTheme.textLight,
-                height: 1.2,
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWideBentoCard(
+    BuildContext context, {
+    required String title,
+    required String subtitle,
+    required String tag,
+    required IconData icon,
+    required Gradient gradient,
+    required VoidCallback onTap,
+    bool isEmergency = false,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          gradient: isEmergency ? gradient : AppTheme.glassCardGradient,
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(
+            color: isEmergency ? AppTheme.crimsonRed : AppTheme.accentGold.withValues(alpha: 0.35),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: isEmergency ? AppTheme.crimsonRed.withValues(alpha: 0.25) : Colors.black45,
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: isEmergency ? Colors.black.withValues(alpha: 0.3) : AppTheme.surfaceDark,
+                border: Border.all(
+                  color: isEmergency ? Colors.white38 : AppTheme.accentGold.withValues(alpha: 0.4),
+                ),
+              ),
+              child: Icon(
+                icon,
+                color: isEmergency ? Colors.white : AppTheme.accentGold,
+                size: 24,
               ),
             ),
-            const SizedBox(height: 2),
-            Text(
-              subtitle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.outfit(fontSize: 11, color: AppTheme.textMuted),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: isEmergency ? Colors.black26 : AppTheme.accentGold.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      tag,
+                      style: GoogleFonts.outfit(
+                        fontSize: 9,
+                        fontWeight: FontWeight.bold,
+                        color: isEmergency ? Colors.white : AppTheme.accentGoldLight,
+                        letterSpacing: 0.8,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    title,
+                    style: GoogleFonts.marcellus(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.outfit(
+                      fontSize: 11.5,
+                      color: isEmergency ? Colors.white70 : AppTheme.textMuted,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Icon(
+              Icons.arrow_forward_ios,
+              color: isEmergency ? Colors.white70 : AppTheme.accentGold,
+              size: 14,
             ),
           ],
         ),

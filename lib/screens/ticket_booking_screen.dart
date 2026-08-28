@@ -1,5 +1,3 @@
-// lib/screens/ticket_booking_screen.dart
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../app_theme.dart';
@@ -17,21 +15,18 @@ class TicketBookingScreen extends StatefulWidget {
 
 class _TicketBookingScreenState extends State<TicketBookingScreen> {
   late HeritagePlace _selectedPlace;
-  final _nameController = TextEditingController(text: 'Souvik Das');
-  final _emailController = TextEditingController(text: 'souvik@heritage.in');
-  final _phoneController = TextEditingController(text: '+91 98765 43210');
-
   DateTime _selectedDate = DateTime.now().add(const Duration(days: 1));
-  String _selectedSlot = 'Morning (06:00 AM – 11:30 AM)';
+  String _selectedSlot = 'Morning (08:00 AM - 12:00 PM)';
   int _adultCount = 2;
   int _childCount = 0;
-  final double _pricePerAdult = 50.0;
-  final double _pricePerChild = 25.0;
+  final TextEditingController _nameController = TextEditingController(text: 'Souvik Das');
+  final TextEditingController _emailController = TextEditingController(text: 'souvik@heritage.in');
+  final TextEditingController _phoneController = TextEditingController(text: '+91 98765 43210');
 
-  final List<String> _slots = [
-    'Morning (06:00 AM – 11:30 AM)',
-    'Afternoon (12:00 PM – 04:30 PM)',
-    'Sunset & Light Show (05:00 PM – 08:30 PM)',
+  final List<String> _timeSlots = [
+    'Morning (08:00 AM - 12:00 PM)',
+    'Afternoon (12:00 PM - 04:00 PM)',
+    'Sunset Session (04:00 PM - 06:30 PM)',
   ];
 
   @override
@@ -41,233 +36,15 @@ class _TicketBookingScreenState extends State<TicketBookingScreen> {
     _selectedPlace = widget.preSelectedPlace ?? allPlaces.first;
   }
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
-    super.dispose();
+  int get _ticketRate {
+    if (_selectedPlace.entryFee.contains('₹50')) return 50;
+    if (_selectedPlace.entryFee.contains('₹40')) return 40;
+    if (_selectedPlace.entryFee.contains('₹25')) return 25;
+    if (_selectedPlace.entryFee.contains('₹20')) return 20;
+    return 50;
   }
 
-  double get _totalPrice => (_adultCount * _pricePerAdult) + (_childCount * _pricePerChild);
-
-  Future<void> _selectDate() async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 90)),
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.dark().copyWith(
-            colorScheme: const ColorScheme.dark(
-              primary: AppTheme.accentGold,
-              onPrimary: AppTheme.backgroundDark,
-              surface: AppTheme.surfaceDark,
-              onSurface: AppTheme.textLight,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-    if (picked != null) {
-      setState(() {
-        _selectedDate = picked;
-      });
-    }
-  }
-
-  void _generateTicketPass() {
-    final randomId = 'SKR-${Random().nextInt(900000) + 100000}';
-    final dateStr = '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}';
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient: AppTheme.darkCardGradient,
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: AppTheme.accentGold, width: 2),
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.accentGold.withValues(alpha: 0.3),
-                  blurRadius: 20,
-                  spreadRadius: 2,
-                ),
-              ],
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Top Golden Royal Header
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.account_balance, color: AppTheme.accentGold, size: 28),
-                      const SizedBox(width: 8),
-                      Text(
-                        'E-HERITAGE PASS',
-                        style: GoogleFonts.cinzel(
-                          color: AppTheme.accentGold,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          letterSpacing: 1.5,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    'Archaeological Survey of India & Sanskriti Digital Pass',
-                    style: GoogleFonts.outfit(color: AppTheme.textMuted, fontSize: 10),
-                  ),
-                  const Divider(color: AppTheme.accentGold, height: 24, thickness: 1),
-
-                  // Monument Name
-                  Text(
-                    _selectedPlace.name,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.marcellus(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.accentGoldLight,
-                    ),
-                  ),
-                  Text(
-                    _selectedPlace.location,
-                    style: GoogleFonts.outfit(color: AppTheme.textMuted, fontSize: 12),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Simulated QR Code Box
-                  Container(
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: AppTheme.accentGold, width: 2),
-                    ),
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.qr_code_2, size: 100, color: Colors.black),
-                        Text(
-                          randomId,
-                          style: GoogleFonts.outfit(
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                            letterSpacing: 1.0,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Ticket Details Table
-                  _buildTicketRow('Pass ID', randomId),
-                  _buildTicketRow('Visitor Name', _nameController.text.trim()),
-                  _buildTicketRow('Date of Visit', dateStr),
-                  _buildTicketRow('Time Slot', _selectedSlot.split(' ')[0]),
-                  _buildTicketRow('Visitors', '$_adultCount Adults, $_childCount Children'),
-                  _buildTicketRow('Amount Paid', '₹${_totalPrice.toInt()} (Confirmed)'),
-                  const SizedBox(height: 18),
-
-                  // Verified Status Badge
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: AppTheme.emeraldGreen.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: AppTheme.emeraldGreen),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.verified, color: AppTheme.emeraldGreen, size: 16),
-                        const SizedBox(width: 6),
-                        Text(
-                          'CONFIRMED DIGITAL ENTRY PASS',
-                          style: GoogleFonts.outfit(
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.emeraldGreen,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Actions
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('E-Heritage Pass saved to wallet successfully!'),
-                                backgroundColor: AppTheme.accentGold,
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.download, size: 16),
-                          label: const Text('SAVE PASS'),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: () => Navigator.pop(context),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: AppTheme.textMuted,
-                            side: const BorderSide(color: Colors.white24),
-                          ),
-                          child: const Text('CLOSE'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildTicketRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: GoogleFonts.outfit(fontSize: 12, color: AppTheme.textMuted)),
-          Text(
-            value,
-            style: GoogleFonts.outfit(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: AppTheme.textLight,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  int get _totalAmount => (_adultCount * _ticketRate) + (_childCount * (_ticketRate ~/ 2));
 
   @override
   Widget build(BuildContext context) {
@@ -276,82 +53,36 @@ class _TicketBookingScreenState extends State<TicketBookingScreen> {
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,
       appBar: AppBar(
-        title: const Text('Heritage Monument Pass'),
+        title: const Text('HERITAGE PASS BOOKING'),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header Banner
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                gradient: AppTheme.darkCardGradient,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.3)),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: AppTheme.goldGradient,
-                    ),
-                    child: const Icon(Icons.confirmation_number, color: AppTheme.backgroundDark, size: 28),
-                  ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'ASI Heritage Fast-Track Entry',
-                          style: GoogleFonts.marcellus(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.accentGoldLight,
-                          ),
-                        ),
-                        Text(
-                          'Skip ticket counter queues with instant QR code mobile passes.',
-                          style: GoogleFonts.outfit(fontSize: 12, color: AppTheme.textMuted),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Select Monument Dropdown
-            Text(
-              'Select Heritage Destination',
-              style: GoogleFonts.cinzel(fontSize: 14, fontWeight: FontWeight.bold, color: AppTheme.accentGold),
-            ),
+            // Monument Selector
+            Text('Select Heritage Monument', style: GoogleFonts.cinzel(fontSize: 14, fontWeight: FontWeight.bold, color: AppTheme.accentGold)),
             const SizedBox(height: 8),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                color: AppTheme.cardDark,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.3)),
+                gradient: AppTheme.glassCardGradient,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.35)),
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<HeritagePlace>(
                   value: _selectedPlace,
                   isExpanded: true,
                   dropdownColor: AppTheme.surfaceDark,
-                  icon: const Icon(Icons.keyboard_arrow_down, color: AppTheme.accentGold),
+                  icon: const Icon(Icons.arrow_drop_down, color: AppTheme.accentGold),
                   items: allPlaces.map((place) {
                     return DropdownMenuItem<HeritagePlace>(
                       value: place,
                       child: Text(
-                        '${place.name} (${place.location})',
+                        '${place.name} (${place.state})',
                         style: GoogleFonts.outfit(color: AppTheme.textLight, fontSize: 13),
-                        overflow: TextOverflow.ellipsis,
                       ),
                     );
                   }).toList(),
@@ -363,146 +94,86 @@ class _TicketBookingScreenState extends State<TicketBookingScreen> {
             ),
             const SizedBox(height: 20),
 
-            // Visitor Contact Info
-            Text(
-              'Lead Visitor Details',
-              style: GoogleFonts.cinzel(fontSize: 14, fontWeight: FontWeight.bold, color: AppTheme.accentGold),
-            ),
+            // Date Picker
+            Text('Date of Visit', style: GoogleFonts.cinzel(fontSize: 14, fontWeight: FontWeight.bold, color: AppTheme.accentGold)),
             const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: AppTheme.cardDark,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.3)),
-              ),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: _nameController,
-                    style: GoogleFonts.outfit(color: AppTheme.textLight, fontSize: 13),
-                    decoration: InputDecoration(
-                      labelText: 'Full Name',
-                      labelStyle: GoogleFonts.outfit(color: AppTheme.accentGold, fontSize: 12),
-                      prefixIcon: const Icon(Icons.person, color: AppTheme.accentGold, size: 18),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.white12)),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            GestureDetector(
+              onTap: () async {
+                final picked = await showDatePicker(
+                  context: context,
+                  initialDate: _selectedDate,
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime.now().add(const Duration(days: 90)),
+                  builder: (context, child) {
+                    return Theme(
+                      data: ThemeData.dark().copyWith(
+                        colorScheme: const ColorScheme.dark(
+                          primary: AppTheme.accentGold,
+                          onPrimary: AppTheme.backgroundDark,
+                          surface: AppTheme.surfaceDark,
+                        ),
+                      ),
+                      child: child!,
+                    );
+                  },
+                );
+                if (picked != null) setState(() => _selectedDate = picked);
+              },
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  gradient: AppTheme.glassCardGradient,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.calendar_month, color: AppTheme.accentGold, size: 20),
+                    const SizedBox(width: 12),
+                    Text(
+                      '${_selectedDate.day} / ${_selectedDate.month} / ${_selectedDate.year}',
+                      style: GoogleFonts.outfit(color: AppTheme.accentGoldLight, fontWeight: FontWeight.bold, fontSize: 14),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _emailController,
-                          style: GoogleFonts.outfit(color: AppTheme.textLight, fontSize: 13),
-                          decoration: InputDecoration(
-                            labelText: 'Email Address',
-                            labelStyle: GoogleFonts.outfit(color: AppTheme.accentGold, fontSize: 12),
-                            prefixIcon: const Icon(Icons.email, color: AppTheme.accentGold, size: 18),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.white12)),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: TextField(
-                          controller: _phoneController,
-                          style: GoogleFonts.outfit(color: AppTheme.textLight, fontSize: 13),
-                          decoration: InputDecoration(
-                            labelText: 'Phone Number',
-                            labelStyle: GoogleFonts.outfit(color: AppTheme.accentGold, fontSize: 12),
-                            prefixIcon: const Icon(Icons.phone, color: AppTheme.accentGold, size: 18),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.white12)),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                    const Spacer(),
+                    const Text('Change', style: TextStyle(color: AppTheme.accentGold, fontSize: 12)),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 20),
 
-            // Select Date & Slot
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Visit Date',
-                        style: GoogleFonts.cinzel(fontSize: 13, fontWeight: FontWeight.bold, color: AppTheme.accentGold),
-                      ),
-                      const SizedBox(height: 8),
-                      InkWell(
-                        onTap: _selectDate,
-                        borderRadius: BorderRadius.circular(14),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-                          decoration: BoxDecoration(
-                            color: AppTheme.cardDark,
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.3)),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
-                                style: GoogleFonts.outfit(color: AppTheme.textLight, fontSize: 13),
-                              ),
-                              const Icon(Icons.calendar_today, color: AppTheme.accentGold, size: 16),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
             // Time Slot Selector
-            Text(
-              'Select Entry Slot',
-              style: GoogleFonts.cinzel(fontSize: 13, fontWeight: FontWeight.bold, color: AppTheme.accentGold),
-            ),
+            Text('Select Time Slot', style: GoogleFonts.cinzel(fontSize: 14, fontWeight: FontWeight.bold, color: AppTheme.accentGold)),
             const SizedBox(height: 8),
-            ..._slots.map((slot) {
+            ..._timeSlots.map((slot) {
               bool isSelected = _selectedSlot == slot;
               return GestureDetector(
                 onTap: () => setState(() => _selectedSlot = slot),
                 child: Container(
                   margin: const EdgeInsets.only(bottom: 8),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    color: isSelected ? AppTheme.accentGold.withValues(alpha: 0.15) : AppTheme.cardDark,
+                    color: isSelected ? AppTheme.accentGold.withValues(alpha: 0.2) : AppTheme.cardDark,
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(
                       color: isSelected ? AppTheme.accentGold : Colors.white12,
-                      width: isSelected ? 1.5 : 1.0,
                     ),
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        slot,
-                        style: GoogleFonts.outfit(
-                          color: isSelected ? AppTheme.accentGoldLight : AppTheme.textLight,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                          fontSize: 13,
-                        ),
-                      ),
                       Icon(
                         isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
                         color: isSelected ? AppTheme.accentGold : AppTheme.textMuted,
                         size: 18,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        slot,
+                        style: GoogleFonts.outfit(
+                          fontSize: 12.5,
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          color: isSelected ? AppTheme.accentGoldLight : AppTheme.textLight,
+                        ),
                       ),
                     ],
                   ),
@@ -511,71 +182,63 @@ class _TicketBookingScreenState extends State<TicketBookingScreen> {
             }),
             const SizedBox(height: 20),
 
-            // Visitors Stepper
-            Text(
-              'Number of Visitors',
-              style: GoogleFonts.cinzel(fontSize: 13, fontWeight: FontWeight.bold, color: AppTheme.accentGold),
-            ),
-            const SizedBox(height: 10),
-
+            // Visitor Count Stepper
+            Text('Number of Visitors', style: GoogleFonts.cinzel(fontSize: 14, fontWeight: FontWeight.bold, color: AppTheme.accentGold)),
+            const SizedBox(height: 8),
             Container(
-              padding: const EdgeInsets.all(14),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppTheme.cardDark,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white12),
+                gradient: AppTheme.glassCardGradient,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.3)),
               ),
               child: Column(
                 children: [
-                  // Adult Stepper
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Adults (15+ yrs)', style: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: AppTheme.textLight)),
-                          Text('₹50 per visitor', style: GoogleFonts.outfit(fontSize: 11, color: AppTheme.accentGold)),
+                          Text('Adults (Age 15+)', style: GoogleFonts.outfit(color: AppTheme.textLight, fontWeight: FontWeight.bold, fontSize: 13)),
+                          Text('₹$_ticketRate per person', style: GoogleFonts.outfit(color: AppTheme.textMuted, fontSize: 11)),
                         ],
                       ),
                       Row(
                         children: [
-                          IconButton(
-                            icon: const Icon(Icons.remove_circle_outline, color: AppTheme.accentGold),
-                            onPressed: _adultCount > 1 ? () => setState(() => _adultCount--) : null,
+                          _buildStepperBtn(Icons.remove, () {
+                            if (_adultCount > 1) setState(() => _adultCount--);
+                          }),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 14),
+                            child: Text('$_adultCount', style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.accentGoldLight)),
                           ),
-                          Text('$_adultCount', style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.textLight)),
-                          IconButton(
-                            icon: const Icon(Icons.add_circle_outline, color: AppTheme.accentGold),
-                            onPressed: () => setState(() => _adultCount++),
-                          ),
+                          _buildStepperBtn(Icons.add, () => setState(() => _adultCount++)),
                         ],
                       ),
                     ],
                   ),
-                  const Divider(color: Colors.white12),
-                  // Child Stepper
+                  const Divider(color: Colors.white12, height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Children (under 15 yrs)', style: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: AppTheme.textLight)),
-                          Text('₹25 per child', style: GoogleFonts.outfit(fontSize: 11, color: AppTheme.accentGold)),
+                          Text('Children (Under 15)', style: GoogleFonts.outfit(color: AppTheme.textLight, fontWeight: FontWeight.bold, fontSize: 13)),
+                          Text('₹${_ticketRate ~/ 2} per child', style: GoogleFonts.outfit(color: AppTheme.textMuted, fontSize: 11)),
                         ],
                       ),
                       Row(
                         children: [
-                          IconButton(
-                            icon: const Icon(Icons.remove_circle_outline, color: AppTheme.accentGold),
-                            onPressed: _childCount > 0 ? () => setState(() => _childCount--) : null,
+                          _buildStepperBtn(Icons.remove, () {
+                            if (_childCount > 0) setState(() => _childCount--);
+                          }),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 14),
+                            child: Text('$_childCount', style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.accentGoldLight)),
                           ),
-                          Text('$_childCount', style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.textLight)),
-                          IconButton(
-                            icon: const Icon(Icons.add_circle_outline, color: AppTheme.accentGold),
-                            onPressed: () => setState(() => _childCount++),
-                          ),
+                          _buildStepperBtn(Icons.add, () => setState(() => _childCount++)),
                         ],
                       ),
                     ],
@@ -585,13 +248,23 @@ class _TicketBookingScreenState extends State<TicketBookingScreen> {
             ),
             const SizedBox(height: 24),
 
-            // Total Amount & Book Button
+            // Lead Visitor Info
+            Text('Lead Visitor Details', style: GoogleFonts.cinzel(fontSize: 14, fontWeight: FontWeight.bold, color: AppTheme.accentGold)),
+            const SizedBox(height: 8),
+            _buildInputField('Full Name', _nameController, Icons.person_outline),
+            const SizedBox(height: 10),
+            _buildInputField('Email Address', _emailController, Icons.email_outlined),
+            const SizedBox(height: 10),
+            _buildInputField('Phone Number', _phoneController, Icons.phone_outlined),
+            const SizedBox(height: 26),
+
+            // Total & Book Button
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
-                color: AppTheme.surfaceDark,
-                borderRadius: BorderRadius.circular(18),
-                border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.3)),
+                color: AppTheme.surfaceGlass,
+                borderRadius: BorderRadius.circular(22),
+                border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.35)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -599,27 +272,130 @@ class _TicketBookingScreenState extends State<TicketBookingScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Total Amount', style: GoogleFonts.outfit(fontSize: 12, color: AppTheme.textMuted)),
+                      Text('TOTAL AMOUNT', style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.bold, color: AppTheme.textMuted)),
                       Text(
-                        '₹${_totalPrice.toInt()}',
-                        style: GoogleFonts.cinzel(fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.accentGold),
+                        '₹$_totalAmount',
+                        style: GoogleFonts.cinzel(fontSize: 24, fontWeight: FontWeight.bold, color: AppTheme.accentGold),
                       ),
                     ],
                   ),
                   ElevatedButton(
-                    onPressed: _generateTicketPass,
+                    onPressed: () => _showConfirmedTicketDialog(context),
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.accentGold,
+                      foregroundColor: AppTheme.backgroundDark,
                       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     ),
-                    child: const Text('GENERATE PASS'),
+                    child: const Text('GENERATE E-PASS'),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 30),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildStepperBtn(IconData icon, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: AppTheme.surfaceDark,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.4)),
+        ),
+        child: Icon(icon, color: AppTheme.accentGold, size: 16),
+      ),
+    );
+  }
+
+  Widget _buildInputField(String hint, TextEditingController controller, IconData icon) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppTheme.cardDark,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.white12),
+      ),
+      child: TextField(
+        controller: controller,
+        style: GoogleFonts.outfit(color: AppTheme.textLight, fontSize: 13),
+        decoration: InputDecoration(
+          hintText: hint,
+          prefixIcon: Icon(icon, color: AppTheme.accentGold, size: 18),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        ),
+      ),
+    );
+  }
+
+  void _showConfirmedTicketDialog(BuildContext context) {
+    final bookingId = 'SAN-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.all(22),
+            decoration: BoxDecoration(
+              color: AppTheme.surfaceDark,
+              borderRadius: BorderRadius.circular(28),
+              border: Border.all(color: AppTheme.accentGold, width: 1.5),
+              boxShadow: [
+                BoxShadow(
+                  color: AppTheme.accentGold.withValues(alpha: 0.25),
+                  blurRadius: 20,
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: AppTheme.goldGradient,
+                  ),
+                  child: const Icon(Icons.check, color: AppTheme.backgroundDark, size: 28),
+                ),
+                const SizedBox(height: 12),
+                Text('OFFICIAL E-PASS ISSUED', style: GoogleFonts.cinzel(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.accentGoldLight)),
+                Text('Pass ID: $bookingId', style: GoogleFonts.outfit(fontSize: 11, color: AppTheme.textMuted)),
+                const Divider(color: Colors.white24, height: 24),
+                // QR Mock
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: const Icon(Icons.qr_code_2, size: 110, color: Colors.black),
+                ),
+                const SizedBox(height: 14),
+                Text(_selectedPlace.name, style: GoogleFonts.marcellus(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.accentGoldLight)),
+                Text('${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year} • $_selectedSlot', textAlign: TextAlign.center, style: GoogleFonts.outfit(fontSize: 11, color: AppTheme.textMuted)),
+                const SizedBox(height: 8),
+                Text('Visitors: $_adultCount Adults, $_childCount Children • Total: ₹$_totalAmount', style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.accentGold)),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('DOWNLOAD PASS'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

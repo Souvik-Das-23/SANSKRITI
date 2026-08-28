@@ -1,4 +1,5 @@
 // lib/screens/details_screen.dart
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../app_theme.dart';
@@ -44,34 +45,48 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             SliverAppBar(
-              expandedHeight: 320.0,
+              expandedHeight: 360.0,
               pinned: true,
               backgroundColor: AppTheme.backgroundDark,
               leading: IconButton(
-                icon: Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.6),
-                    shape: BoxShape.circle,
-                    border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.4)),
+                icon: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.5),
+                        shape: BoxShape.circle,
+                        border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.35)),
+                      ),
+                      child: const Icon(Icons.arrow_back, color: AppTheme.accentGoldLight, size: 18),
+                    ),
                   ),
-                  child: const Icon(Icons.arrow_back, color: AppTheme.accentGold, size: 20),
                 ),
                 onPressed: () => Navigator.pop(context),
               ),
               actions: [
                 IconButton(
-                  icon: Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.6),
-                      shape: BoxShape.circle,
-                      border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.4)),
-                    ),
-                    child: Icon(
-                      isFav ? Icons.favorite : Icons.favorite_border,
-                      color: isFav ? AppTheme.crimsonRed : AppTheme.accentGold,
-                      size: 20,
+                  icon: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.5),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isFav ? AppTheme.crimsonRed : AppTheme.accentGold.withValues(alpha: 0.35),
+                          ),
+                        ),
+                        child: Icon(
+                          isFav ? Icons.favorite : Icons.favorite_border,
+                          color: isFav ? AppTheme.crimsonRed : AppTheme.accentGoldLight,
+                          size: 18,
+                        ),
+                      ),
                     ),
                   ),
                   onPressed: () {
@@ -100,9 +115,9 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
                       ),
                     ),
                     Positioned(
-                      bottom: 20,
-                      left: 16,
-                      right: 16,
+                      bottom: 24,
+                      left: 20,
+                      right: 20,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -136,11 +151,11 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
                             place.name,
                             style: GoogleFonts.marcellus(
                               color: AppTheme.accentGoldLight,
-                              fontSize: 26,
+                              fontSize: 28,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 2),
+                          const SizedBox(height: 3),
                           Text(
                             place.hindiName,
                             style: GoogleFonts.rozhaOne(
@@ -148,7 +163,7 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
                               fontSize: 16,
                             ),
                           ),
-                          const SizedBox(height: 6),
+                          const SizedBox(height: 8),
                           Row(
                             children: [
                               const Icon(Icons.location_on, color: AppTheme.accentGold, size: 16),
@@ -161,10 +176,10 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
                               ),
                               if (place.liveDistance != null)
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                   decoration: BoxDecoration(
                                     color: AppTheme.surfaceDark.withValues(alpha: 0.8),
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(12),
                                     border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.5)),
                                   ),
                                   child: Text(
@@ -188,19 +203,22 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
             SliverPersistentHeader(
               pinned: true,
               delegate: _SliverAppBarDelegate(
-                TabBar(
-                  controller: _tabController,
-                  indicatorColor: AppTheme.accentGold,
-                  indicatorWeight: 3,
-                  labelColor: AppTheme.accentGold,
-                  unselectedLabelColor: AppTheme.textMuted,
-                  labelStyle: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.bold),
-                  tabs: const [
-                    Tab(text: 'Overview'),
-                    Tab(text: 'Architecture'),
-                    Tab(text: 'Gallery'),
-                    Tab(text: 'Travel Info'),
-                  ],
+                Container(
+                  color: AppTheme.backgroundDark,
+                  child: TabBar(
+                    controller: _tabController,
+                    indicatorColor: AppTheme.accentGold,
+                    indicatorWeight: 3,
+                    labelColor: AppTheme.accentGold,
+                    unselectedLabelColor: AppTheme.textMuted,
+                    labelStyle: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.bold),
+                    tabs: const [
+                      Tab(text: 'Overview'),
+                      Tab(text: 'Architecture'),
+                      Tab(text: 'Gallery'),
+                      Tab(text: 'Travel Info'),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -209,13 +227,9 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
         body: TabBarView(
           controller: _tabController,
           children: [
-            // Tab 1: Overview
             _buildOverviewTab(place),
-            // Tab 2: Architecture
             _buildArchitectureTab(place),
-            // Tab 3: Gallery
             _buildGalleryTab(place),
-            // Tab 4: Travel Info
             _buildTravelInfoTab(place),
           ],
         ),
@@ -226,7 +240,7 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
 
   Widget _buildOverviewTab(HeritagePlace place) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -256,50 +270,58 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
           ),
           const SizedBox(height: 24),
 
-          // Audio Guide Card
+          // Modern Audio Guide Card
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
               gradient: AppTheme.darkCardGradient,
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(22),
               border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.4)),
+              boxShadow: [
+                BoxShadow(
+                  color: AppTheme.accentGold.withValues(alpha: 0.1),
+                  blurRadius: 16,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(14),
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: AppTheme.goldGradient,
                   ),
                   child: const Icon(Icons.headphones, color: AppTheme.backgroundDark, size: 24),
                 ),
-                const SizedBox(width: 14),
+                const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'AUDIO TOUR GUIDE',
+                        'ROYAL AUDIO TOUR',
                         style: GoogleFonts.outfit(
-                          fontSize: 11,
+                          fontSize: 10,
                           fontWeight: FontWeight.bold,
                           color: AppTheme.accentGold,
-                          letterSpacing: 1.0,
+                          letterSpacing: 1.2,
                         ),
                       ),
+                      const SizedBox(height: 2),
                       Text(
                         place.audioGuideTitle,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.marcellus(
-                          fontSize: 14,
+                          fontSize: 15,
                           fontWeight: FontWeight.bold,
                           color: AppTheme.textLight,
                         ),
                       ),
                       Text(
-                        'Duration: ${place.audioGuideDuration} • Multiple Languages',
+                        '${place.audioGuideDuration} • EN / HI / BN / SA',
                         style: GoogleFonts.outfit(fontSize: 11, color: AppTheme.textMuted),
                       ),
                     ],
@@ -308,15 +330,15 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
                 ElevatedButton(
                   onPressed: () => AudioGuideBottomSheet.show(context, place),
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    minimumSize: const Size(60, 34),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    minimumSize: const Size(64, 38),
                   ),
                   child: const Text('Listen'),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 28),
 
           // About Narrative
           Text(
@@ -326,9 +348,9 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
           const SizedBox(height: 10),
           Text(
             place.description,
-            style: GoogleFonts.outfit(fontSize: 14, height: 1.6, color: AppTheme.textLight),
+            style: GoogleFonts.outfit(fontSize: 14.5, height: 1.65, color: AppTheme.textLight),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
 
           // Historical Background
           Text(
@@ -338,18 +360,18 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
           const SizedBox(height: 10),
           Text(
             place.history,
-            style: GoogleFonts.outfit(fontSize: 14, height: 1.6, color: AppTheme.textLight),
+            style: GoogleFonts.outfit(fontSize: 14.5, height: 1.65, color: AppTheme.textLight),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 26),
 
           // Cultural Significance
           Text(
             'Cultural & Spiritual Significance',
             style: GoogleFonts.cinzel(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.accentGold),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           ...place.culturalSignificance.map((item) => Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
+            padding: const EdgeInsets.only(bottom: 10.0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -357,13 +379,12 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
                 Expanded(
                   child: Text(
                     item,
-                    style: GoogleFonts.outfit(fontSize: 13, height: 1.4, color: AppTheme.textLight),
+                    style: GoogleFonts.outfit(fontSize: 13.5, height: 1.45, color: AppTheme.textLight),
                   ),
                 ),
               ],
             ),
           )),
-          const SizedBox(height: 40),
         ],
       ),
     );
@@ -371,7 +392,7 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
 
   Widget _buildArchitectureTab(HeritagePlace place) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -384,7 +405,7 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
             'Discover the intricate masonry, mathematical alignment, and craftsmanship that define this monumental structure.',
             style: GoogleFonts.outfit(fontSize: 13, color: AppTheme.textMuted),
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 20),
           ...place.architectureHighlights.asMap().entries.map((entry) {
             int index = entry.key + 1;
             String highlight = entry.value;
@@ -392,16 +413,16 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
               margin: const EdgeInsets.only(bottom: 14),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppTheme.cardDark,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.2)),
+                gradient: AppTheme.glassCardGradient,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.25)),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    width: 28,
-                    height: 28,
+                    width: 30,
+                    height: 30,
                     decoration: BoxDecoration(
                       color: AppTheme.surfaceDark,
                       shape: BoxShape.circle,
@@ -413,7 +434,7 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
                         style: GoogleFonts.cinzel(
                           color: AppTheme.accentGold,
                           fontWeight: FontWeight.bold,
-                          fontSize: 12,
+                          fontSize: 13,
                         ),
                       ),
                     ),
@@ -438,11 +459,11 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
     final allImages = [place.heroImage, ...place.galleryImages];
 
     return GridView.builder(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
+        crossAxisSpacing: 14,
+        mainAxisSpacing: 14,
         childAspectRatio: 1.0,
       ),
       itemCount: allImages.length,
@@ -461,7 +482,7 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
             );
           },
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(18),
             child: Stack(
               fit: StackFit.expand,
               children: [
@@ -475,8 +496,8 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
                 ),
                 Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.3)),
-                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.35)),
+                    borderRadius: BorderRadius.circular(18),
                   ),
                 ),
               ],
@@ -489,7 +510,7 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
 
   Widget _buildTravelInfoTab(HeritagePlace place) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -498,26 +519,26 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
           _buildInfoSection('🎟️ Pass & Entry Information', place.entryFee),
           const SizedBox(height: 16),
           _buildInfoSection('⏰ Opening Hours', place.timings),
-          const SizedBox(height: 20),
+          const SizedBox(height: 22),
           Text(
-            'Nearby Attractions & Heritage Sites',
+            'Nearby Attractions & Circuits',
             style: GoogleFonts.cinzel(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.accentGold),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           ...place.nearbyAttractions.map((attraction) => Container(
-            margin: const EdgeInsets.only(bottom: 8),
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            margin: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: AppTheme.cardDark,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white12),
+              gradient: AppTheme.glassCardGradient,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.2)),
             ),
             child: Row(
               children: [
-                const Icon(Icons.explore, color: AppTheme.accentGold, size: 18),
-                const SizedBox(width: 10),
+                const Icon(Icons.explore, color: AppTheme.accentGold, size: 20),
+                const SizedBox(width: 12),
                 Expanded(
-                  child: Text(attraction, style: GoogleFonts.outfit(color: AppTheme.textLight, fontSize: 13)),
+                  child: Text(attraction, style: GoogleFonts.outfit(color: AppTheme.textLight, fontSize: 13.5)),
                 ),
               ],
             ),
@@ -530,18 +551,18 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
   Widget _buildInfoSection(String title, String content) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.cardDark,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.2)),
+        gradient: AppTheme.glassCardGradient,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.25)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: AppTheme.accentGold, fontSize: 13)),
-          const SizedBox(height: 4),
-          Text(content, style: GoogleFonts.outfit(color: AppTheme.textLight, fontSize: 13)),
+          Text(title, style: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: AppTheme.accentGold, fontSize: 13.5)),
+          const SizedBox(height: 6),
+          Text(content, style: GoogleFonts.outfit(color: AppTheme.textLight, fontSize: 13.5)),
         ],
       ),
     );
@@ -549,16 +570,16 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
 
   Widget _buildStatCard(String label, String value, IconData icon) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppTheme.cardDark,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.2)),
+        gradient: AppTheme.glassCardGradient,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.25)),
       ),
       child: Row(
         children: [
-          Icon(icon, color: AppTheme.accentGold, size: 20),
-          const SizedBox(width: 10),
+          Icon(icon, color: AppTheme.accentGold, size: 22),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -568,7 +589,7 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
                   value,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.textLight),
+                  style: GoogleFonts.outfit(fontSize: 12.5, fontWeight: FontWeight.bold, color: AppTheme.textLight),
                 ),
               ],
             ),
@@ -580,51 +601,65 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
 
   Widget _buildStickyBottomBar(BuildContext context, HeritagePlace place) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: AppTheme.surfaceDark,
-        border: Border(top: BorderSide(color: AppTheme.accentGold.withValues(alpha: 0.3))),
+        color: AppTheme.surfaceGlass,
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.35)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.6),
+            blurRadius: 18,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
-      child: SafeArea(
-        top: false,
-        child: Row(
-          children: [
-            // Navigate Button
-            Expanded(
-              flex: 3,
-              child: ElevatedButton.icon(
-                onPressed: () => LocationService.launchNavigation(place.lat, place.lng, placeName: place.name),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.accentGold,
-                  foregroundColor: AppTheme.backgroundDark,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(30),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+          child: Row(
+            children: [
+              // Navigate Button
+              Expanded(
+                flex: 3,
+                child: ElevatedButton.icon(
+                  onPressed: () => LocationService.launchNavigation(place.lat, place.lng, placeName: place.name),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.accentGold,
+                    foregroundColor: AppTheme.backgroundDark,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+                  ),
+                  icon: const Icon(Icons.navigation, size: 18),
+                  label: const Text('NAVIGATE'),
                 ),
-                icon: const Icon(Icons.navigation, size: 18),
-                label: const Text('NAVIGATE'),
               ),
-            ),
-            const SizedBox(width: 10),
-            // Book Pass Button
-            Expanded(
-              flex: 3,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => TicketBookingScreen(preSelectedPlace: place)),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.cardDarkElevated,
-                  foregroundColor: AppTheme.accentGold,
-                  side: const BorderSide(color: AppTheme.accentGold, width: 1.2),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+              const SizedBox(width: 10),
+              // Book Pass Button
+              Expanded(
+                flex: 3,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => TicketBookingScreen(preSelectedPlace: place)),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.cardDarkElevated,
+                    foregroundColor: AppTheme.accentGold,
+                    side: const BorderSide(color: AppTheme.accentGold, width: 1.2),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+                  ),
+                  icon: const Icon(Icons.confirmation_number_outlined, size: 18),
+                  label: const Text('BOOK PASS'),
                 ),
-                icon: const Icon(Icons.confirmation_number_outlined, size: 18),
-                label: const Text('BOOK PASS'),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -632,21 +667,18 @@ class _DetailsScreenState extends State<DetailsScreen> with SingleTickerProvider
 }
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  final TabBar _tabBar;
+  final Widget _child;
 
-  _SliverAppBarDelegate(this._tabBar);
+  _SliverAppBarDelegate(this._child);
 
   @override
-  double get minExtent => _tabBar.preferredSize.height;
+  double get minExtent => 48.0;
   @override
-  double get maxExtent => _tabBar.preferredSize.height;
+  double get maxExtent => 48.0;
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      color: AppTheme.backgroundDark,
-      child: _tabBar,
-    );
+    return _child;
   }
 
   @override

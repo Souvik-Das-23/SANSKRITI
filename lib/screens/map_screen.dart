@@ -1,4 +1,5 @@
 // lib/screens/map_screen.dart
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,38 +19,28 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   final MapController _mapController = MapController();
-  LatLng _userLatlng = LocationService.defaultLocation;
-  bool _isLoadingLocation = true;
-  HeritageCategory _selectedCategory = HeritageCategory.all;
-  double _maxRadiusKm = 1000.0; // Default wide radius
-  HeritagePlace? _focusedPlace;
-
   List<HeritagePlace> _allPlaces = [];
   List<HeritagePlace> _filteredPlaces = [];
+  final HeritageCategory _selectedCategory = HeritageCategory.all;
+  double _maxRadiusKm = 1500.0; // Default All India
+  LatLng _userLatlng = const LatLng(28.6139, 77.2090); // Default New Delhi
+  HeritagePlace? _focusedPlace;
+
+  final List<double> _radiusOptions = [15.0, 50.0, 250.0, 1500.0];
 
   @override
   void initState() {
     super.initState();
     _allPlaces = HeritageRepository.getAllPlaces();
+    _filteredPlaces = _allPlaces;
     _fetchLiveLocation();
   }
 
   Future<void> _fetchLiveLocation() async {
-    setState(() => _isLoadingLocation = true);
-    try {
-      final pos = await LocationService.getCurrentLocation();
-      setState(() {
-        _userLatlng = pos;
-        LocationService.updatePlacesDistances(_allPlaces, _userLatlng);
-        _applyFilters();
-        _isLoadingLocation = false;
-      });
-      _mapController.move(_userLatlng, 10.0);
-    } catch (e) {
-      LocationService.updatePlacesDistances(_allPlaces, _userLatlng);
-      _applyFilters();
-      setState(() => _isLoadingLocation = false);
-    }
+    final pos = await LocationService.getCurrentLocation();
+    _userLatlng = LatLng(pos.latitude, pos.longitude);
+    LocationService.updatePlacesDistances(_allPlaces, pos);
+    _applyFilters();
   }
 
   void _applyFilters() {
@@ -85,85 +76,69 @@ class _MapScreenState extends State<MapScreen> {
     _mapController.move(LatLng(place.lat, place.lng), 14.0);
   }
 
-  Color _getCategoryMarkerColor(HeritageCategory category) {
-    switch (category) {
-      case HeritageCategory.temples:
-        return AppTheme.accentGold;
-      case HeritageCategory.forts:
-        return AppTheme.crimsonRed;
-      case HeritageCategory.caves:
-        return AppTheme.emeraldGreen;
-      case HeritageCategory.palaces:
-        return AppTheme.sapphireBlue;
-      case HeritageCategory.ghats:
-        return const Color(0xFF00BCD4);
-      default:
-        return AppTheme.accentGoldShimmer;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,
       body: Stack(
         children: [
-          // 1. Dark Tile Map
+          // 1. Interactive Dark Tile Map
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
               initialCenter: _userLatlng,
-              initialZoom: 10.0,
-              minZoom: 3.0,
+              initialZoom: 5.5,
+              minZoom: 3.5,
               maxZoom: 18.0,
             ),
             children: [
               TileLayer(
                 urlTemplate: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
                 subdomains: const ['a', 'b', 'c', 'd'],
-                userAgentPackageName: 'com.sanskriti.heritage',
+                userAgentPackageName: 'com.example.sanskriti',
               ),
               MarkerLayer(
                 markers: [
-                  // User Location Marker
+                  // User GPS Pulse Marker
                   Marker(
                     point: _userLatlng,
                     width: 50,
                     height: 50,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.blue.withValues(alpha: 0.25),
                         shape: BoxShape.circle,
-                        border: Border.all(color: Colors.lightBlueAccent, width: 1.5),
+                        color: AppTheme.sapphireBlue.withValues(alpha: 0.25),
+                        border: Border.all(color: AppTheme.sapphireBlue, width: 2),
                       ),
                       child: const Center(
-                        child: Icon(Icons.my_location, color: Colors.cyanAccent, size: 24),
+                        child: Icon(Icons.my_location, color: Colors.white, size: 18),
                       ),
                     ),
                   ),
-                  // Heritage Places Markers
+                  // Monument Category Markers
                   ..._filteredPlaces.map((place) {
-                    bool isFocused = _focusedPlace?.id == place.id;
-                    Color markerColor = _getCategoryMarkerColor(place.category);
-
+                    final isFocused = _focusedPlace?.id == place.id;
                     return Marker(
                       point: LatLng(place.lat, place.lng),
-                      width: isFocused ? 55 : 44,
-                      height: isFocused ? 55 : 44,
+                      width: isFocused ? 54 : 42,
+                      height: isFocused ? 54 : 42,
                       child: GestureDetector(
                         onTap: () => _focusOnPlace(place),
                         child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 250),
+                          duration: const Duration(milliseconds: 300),
                           decoration: BoxDecoration(
-                            color: isFocused ? markerColor : AppTheme.surfaceDark,
                             shape: BoxShape.circle,
+                            gradient: isFocused ? AppTheme.goldGradient : null,
+                            color: isFocused ? null : AppTheme.cardDarkElevated,
                             border: Border.all(
-                              color: isFocused ? Colors.white : markerColor,
+                              color: isFocused ? AppTheme.accentGoldLight : AppTheme.accentGold,
                               width: isFocused ? 2.5 : 1.5,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: markerColor.withValues(alpha: 0.5),
+                                color: isFocused
+                                    ? AppTheme.accentGold.withValues(alpha: 0.5)
+                                    : Colors.black.withValues(alpha: 0.5),
                                 blurRadius: isFocused ? 12 : 6,
                               ),
                             ],
@@ -171,7 +146,7 @@ class _MapScreenState extends State<MapScreen> {
                           child: Center(
                             child: Text(
                               place.category.iconName,
-                              style: TextStyle(fontSize: isFocused ? 20 : 16),
+                              style: TextStyle(fontSize: isFocused ? 20 : 15),
                             ),
                           ),
                         ),
@@ -183,77 +158,93 @@ class _MapScreenState extends State<MapScreen> {
             ],
           ),
 
-          // 2. Top Header & Radar Status
+          // 2. Top Modern Floating Glass Bar
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
+              padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
               child: Column(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: AppTheme.surfaceDark.withValues(alpha: 0.92),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.4)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.6),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: AppTheme.surfaceGlass,
+                          borderRadius: BorderRadius.circular(24),
+                          border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.35)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.5),
+                              blurRadius: 14,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        _isLoadingLocation
-                            ? const SizedBox(
-                                width: 18,
-                                height: 18,
-                                child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.accentGold),
-                              )
-                            : const Icon(Icons.radar, color: AppTheme.accentGold, size: 22),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                'HERITAGE RADAR',
-                                style: GoogleFonts.cinzel(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                  color: AppTheme.accentGold,
-                                  letterSpacing: 1.0,
-                                ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 10,
+                              height: 10,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppTheme.emeraldGreen,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppTheme.emeraldGreen,
+                                    blurRadius: 6,
+                                    spreadRadius: 1,
+                                  ),
+                                ],
                               ),
-                              Text(
-                                '${_filteredPlaces.length} Heritage Sites in Range',
-                                style: GoogleFonts.outfit(color: AppTheme.textMuted, fontSize: 11),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'HERITAGE RADAR',
+                                    style: GoogleFonts.cinzel(
+                                      color: AppTheme.accentGold,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 1.2,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${_filteredPlaces.length} Sites within ${_maxRadiusKm >= 900 ? "All India" : "${_maxRadiusKm.toInt()} km"}',
+                                    style: GoogleFonts.outfit(color: AppTheme.textMuted, fontSize: 11),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.my_location, color: AppTheme.accentGold, size: 20),
+                              onPressed: () {
+                                _mapController.move(_userLatlng, 12.0);
+                              },
+                            ),
+                          ],
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.my_location, color: AppTheme.accentGold, size: 20),
-                          tooltip: 'Recenter to Current Location',
-                          onPressed: _fetchLiveLocation,
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 10),
 
-                  // Category selector pills
+                  // Radius Selector Chips
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
                     child: Row(
-                      children: HeritageCategory.values.map((cat) {
-                        bool isSel = _selectedCategory == cat;
+                      children: _radiusOptions.map((radius) {
+                        bool isSelected = _maxRadiusKm == radius;
+                        String label = radius >= 900 ? 'All India' : '< ${radius.toInt()} km';
                         return GestureDetector(
                           onTap: () {
                             setState(() {
-                              _selectedCategory = cat;
+                              _maxRadiusKm = radius;
                               _applyFilters();
                             });
                           },
@@ -261,65 +252,18 @@ class _MapScreenState extends State<MapScreen> {
                             margin: const EdgeInsets.only(right: 8),
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
-                              color: isSel ? AppTheme.accentGold : AppTheme.surfaceDark.withValues(alpha: 0.85),
+                              color: isSelected ? AppTheme.accentGold : AppTheme.surfaceDark.withValues(alpha: 0.85),
                               borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: isSel ? AppTheme.accentGold : Colors.white24),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(cat.iconName, style: const TextStyle(fontSize: 12)),
-                                const SizedBox(width: 4),
-                                Text(
-                                  cat.displayName,
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 11,
-                                    fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
-                                    color: isSel ? AppTheme.backgroundDark : AppTheme.textLight,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-
-                  // Radius selector chips
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        {'label': 'All India', 'val': 2500.0},
-                        {'label': 'Within 250 km', 'val': 250.0},
-                        {'label': 'Within 50 km', 'val': 50.0},
-                        {'label': 'Within 15 km', 'val': 15.0},
-                      ].map((rad) {
-                        double val = rad['val'] as double;
-                        bool isSel = _maxRadiusKm == val;
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _maxRadiusKm = val;
-                              _applyFilters();
-                            });
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(right: 6),
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: isSel ? AppTheme.accentGold.withValues(alpha: 0.3) : AppTheme.surfaceDark.withValues(alpha: 0.85),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: isSel ? AppTheme.accentGold : Colors.white12),
+                              border: Border.all(
+                                color: isSelected ? AppTheme.accentGold : AppTheme.accentGold.withValues(alpha: 0.3),
+                              ),
                             ),
                             child: Text(
-                              rad['label'] as String,
+                              label,
                               style: GoogleFonts.outfit(
-                                fontSize: 10,
-                                fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
-                                color: isSel ? AppTheme.accentGoldLight : AppTheme.textMuted,
+                                fontSize: 11,
+                                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                                color: isSelected ? AppTheme.backgroundDark : AppTheme.accentGoldLight,
                               ),
                             ),
                           ),
@@ -332,80 +276,68 @@ class _MapScreenState extends State<MapScreen> {
             ),
           ),
 
-          // 3. Bottom Sliding Carousel of Places
-          Positioned(
-            bottom: 24,
-            left: 0,
-            right: 0,
-            child: SizedBox(
-              height: 190,
-              child: _filteredPlaces.isEmpty
-                  ? Center(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                        decoration: BoxDecoration(
-                          color: AppTheme.surfaceDark,
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.3)),
-                        ),
-                        child: Text(
-                          'No monuments found in this radar filter.',
-                          style: GoogleFonts.outfit(color: AppTheme.textMuted, fontSize: 12),
-                        ),
-                      ),
-                    )
-                  : ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: _filteredPlaces.length,
-                      itemBuilder: (context, index) {
-                        final place = _filteredPlaces[index];
-                        bool isFocused = _focusedPlace?.id == place.id;
+          // 3. Bottom Sliding Carousel
+          if (_filteredPlaces.isNotEmpty)
+            Positioned(
+              bottom: 90,
+              left: 0,
+              right: 0,
+              child: SizedBox(
+                height: 140,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: _filteredPlaces.length,
+                  itemBuilder: (context, index) {
+                    final place = _filteredPlaces[index];
+                    final isFocused = _focusedPlace?.id == place.id;
 
-                        return GestureDetector(
-                          onTap: () => _focusOnPlace(place),
-                          child: Container(
-                            width: 300,
-                            margin: const EdgeInsets.only(right: 14),
-                            decoration: BoxDecoration(
-                              gradient: AppTheme.darkCardGradient,
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: isFocused ? AppTheme.accentGold : AppTheme.accentGold.withValues(alpha: 0.25),
-                                width: isFocused ? 2.0 : 1.0,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: isFocused ? AppTheme.accentGold.withValues(alpha: 0.2) : Colors.black.withValues(alpha: 0.5),
-                                  blurRadius: isFocused ? 14 : 8,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
+                    return GestureDetector(
+                      onTap: () => _focusOnPlace(place),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 250),
+                        width: 280,
+                        margin: const EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          gradient: AppTheme.glassCardGradient,
+                          borderRadius: BorderRadius.circular(22),
+                          border: Border.all(
+                            color: isFocused ? AppTheme.accentGold : AppTheme.accentGold.withValues(alpha: 0.3),
+                            width: isFocused ? 1.8 : 1.0,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: isFocused ? AppTheme.accentGold.withValues(alpha: 0.25) : Colors.black54,
+                              blurRadius: isFocused ? 14 : 8,
                             ),
-                            child: Row(
-                              children: [
-                                // Thumbnail Image
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(19),
-                                    bottomLeft: Radius.circular(19),
-                                  ),
-                                  child: Image.network(
-                                    place.heroImage,
-                                    width: 110,
-                                    height: double.infinity,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) => Container(
-                                      width: 110,
-                                      color: AppTheme.surfaceDark,
-                                      child: const Icon(Icons.account_balance, color: AppTheme.accentGold),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(21),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Row(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(14),
+                                    child: Image.network(
+                                      place.heroImage,
+                                      width: 80,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) => Container(
+                                        width: 80,
+                                        height: 100,
+                                        color: AppTheme.surfaceDark,
+                                        child: const Icon(Icons.account_balance, color: AppTheme.accentGold),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                // Details & Navigate Button
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
+                                  const SizedBox(width: 12),
+                                  Expanded(
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.center,
@@ -420,66 +352,72 @@ class _MapScreenState extends State<MapScreen> {
                                             color: AppTheme.accentGoldLight,
                                           ),
                                         ),
-                                        const SizedBox(height: 4),
-                                        Row(
-                                          children: [
-                                            const Icon(Icons.directions_walk, size: 14, color: AppTheme.accentGold),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              place.liveDistance ?? 'Calculating...',
-                                              style: GoogleFonts.outfit(
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.w600,
-                                                color: AppTheme.textMuted,
-                                              ),
-                                            ),
-                                          ],
+                                        Text(
+                                          place.location,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.outfit(fontSize: 11, color: AppTheme.textMuted),
                                         ),
-                                        const SizedBox(height: 10),
+                                        const SizedBox(height: 6),
                                         Row(
                                           children: [
-                                            Expanded(
-                                              child: ElevatedButton(
-                                                onPressed: () => LocationService.launchNavigation(
-                                                  place.lat,
-                                                  place.lng,
-                                                  placeName: place.name,
+                                            if (place.liveDistance != null)
+                                              Container(
+                                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                                decoration: BoxDecoration(
+                                                  color: AppTheme.surfaceDark,
+                                                  borderRadius: BorderRadius.circular(8),
+                                                  border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.3)),
                                                 ),
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor: AppTheme.accentGold,
-                                                  foregroundColor: AppTheme.backgroundDark,
-                                                  padding: const EdgeInsets.symmetric(vertical: 8),
-                                                  minimumSize: const Size(0, 32),
+                                                child: Text(
+                                                  place.liveDistance!,
+                                                  style: GoogleFonts.outfit(
+                                                    fontSize: 10,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: AppTheme.accentGold,
+                                                  ),
                                                 ),
-                                                child: const Text('NAVIGATE', style: TextStyle(fontSize: 11)),
                                               ),
-                                            ),
-                                            const SizedBox(width: 6),
-                                            IconButton(
-                                              icon: const Icon(Icons.info_outline, color: AppTheme.accentGold, size: 20),
-                                              onPressed: () {
+                                            const Spacer(),
+                                            GestureDetector(
+                                              onTap: () {
                                                 Navigator.push(
                                                   context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) => DetailsScreen(place: place),
-                                                  ),
+                                                  MaterialPageRoute(builder: (context) => DetailsScreen(place: place)),
                                                 );
                                               },
+                                              child: Container(
+                                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                                decoration: BoxDecoration(
+                                                  color: AppTheme.accentGold,
+                                                  borderRadius: BorderRadius.circular(10),
+                                                ),
+                                                child: Text(
+                                                  'View',
+                                                  style: GoogleFonts.outfit(
+                                                    fontSize: 10,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: AppTheme.backgroundDark,
+                                                  ),
+                                                ),
+                                              ),
                                             ),
                                           ],
                                         ),
                                       ],
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
-          ),
         ],
       ),
     );

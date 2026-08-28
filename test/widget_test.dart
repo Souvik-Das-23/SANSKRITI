@@ -4,7 +4,6 @@ import 'package:sanskriti/data/festival_repository.dart';
 import 'package:sanskriti/data/heritage_repository.dart';
 import 'package:sanskriti/data/kala_bazaar_repository.dart';
 import 'package:sanskriti/data/quiz_repository.dart';
-import 'package:sanskriti/main.dart';
 import 'package:sanskriti/models/craft_item.dart';
 import 'package:sanskriti/models/heritage_place.dart';
 import 'package:sanskriti/screens/splash_screen.dart';
