@@ -1,440 +1,229 @@
-🛕 Sanskriti — Discover India's Rich Heritage
+# 🛕 Sanskriti — Discover India's Rich Heritage
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Flutter-3.x-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter">
-  <img src="https://img.shields.io/badge/Dart-2.x-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart">
-  <img src="https://img.shields.io/badge/Google%20Maps-API-4285F4?style=for-the-badge&logo=googlemaps&logoColor=white" alt="Google Maps">
-  <img src="https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Android">
-</p><p align="center">
-  <strong>A modern digital platform for exploring India's historical monuments, cultural destinations, festivals, and regional heritage.</strong>
-</p>---
+[![MIT License](https://img.shields.io/badge/License-MIT-gold.svg)](https://opensource.org/licenses/MIT)
+[![Flutter](https://img.shields.io/badge/Flutter-3.44+-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.0+-0175C2?logo=dart&logoColor=white)](https://dart.dev)
+[![Theme](https://img.shields.io/badge/Theme-Obsidian_%26_Imperial_Gold-D4AF37)](https://github.com/Souvik-Das-23/SANSKRITI)
 
-📖 About Sanskriti
+A modern, royal digital platform for exploring India's historical monuments, cultural destinations, vibrant festivals, authentic artisan handicrafts, interactive audio guides, and AI-powered heritage wisdom.
 
-Sanskriti is a modern Flutter-based cultural tourism application designed to make India's rich historical and cultural heritage easier to discover and explore.
+---
 
-The application combines an elegant dark-and-gold visual experience with interactive maps, categorized heritage destinations, detailed historical information, and cultural services.
+## 📖 About Sanskriti
 
-From discovering ancient temples and magnificent forts to finding nearby heritage locations and navigating directly to them, Sanskriti aims to create a single digital experience for cultural exploration.
+**Sanskriti** is a modern Flutter-based cultural tourism application designed to make India's rich historical and cultural heritage easier to discover, learn about, and explore.
 
-🎯 Vision
+The application combines an elegant **dark-and-gold visual experience** with interactive **Heritage Radar maps**, categorized heritage destinations, in-depth historical and architectural chronicles, audio tours, festival calendars, and craft artisan commerce.
 
-«Connect people with India's heritage through technology.»
+From discovering ancient rock-cut caves and magnificent forts to finding nearby heritage locations and navigating directly to them with turn-by-turn Google Maps, Sanskriti creates a singular digital experience for cultural exploration.
+
+---
+
+## 🎯 Vision
+
+> *« Connect people with India's heritage through technology. »*
 
 Sanskriti focuses on making cultural tourism more accessible, engaging, and technology-driven while encouraging users to explore India's diverse historical and regional identity.
 
 ---
 
-✨ Key Features
+## ✨ Key Features
 
-🗺️ Heritage Radar
+### 🗺️ Heritage Radar & Live Discovery
+- **Interactive Dark Map Engine**: Powered by `flutter_map` and high-performance CartoDB Dark Matter tile architecture.
+- **Custom Categorized Markers**: Color-coded glyph pins for Temples (Gold), Forts (Crimson), Caves (Emerald), Palaces (Sapphire), and Sacred Ghats (Cyan).
+- **Live GPS Proximity Sorting**: Real-time distance computation from user coordinates with proximity radius filters (*Within 15 km, 50 km, 250 km, All India*).
+- **1-Tap Turn-by-Turn Navigation**: Direct handoff to native Google Maps driving mode.
 
-Explore heritage destinations through an interactive Google Maps interface.
+### 🏛️ Heritage Exploration & Catalog
+- **Categorized Discovery**:
+  - 🛕 **Temples**: Konark Sun Temple, Brihadisvara, Meenakshi Amman, Mayapur Chandrodaya Mandir, Khajuraho.
+  - 🏰 **Forts**: Amber Fort, Jaisalmer Golden Fort, Golconda.
+  - 🗿 **Monuments**: Taj Mahal, Hampi Vijayanagara Ruins, Qutub Minar, Victoria Memorial.
+  - 🕳️ **Ancient Caves**: Ajanta & Ellora (Kailash Monolith).
+  - 🏯 **Royal Palaces**: Krishnanagar Rajbari, City Palace.
+  - 🌊 **Sacred Ghats**: Varanasi Dashashwamedh & Manikarnika Ghats.
+- **State & Region Filtering**: Instant filtering across West Bengal, Rajasthan, Uttar Pradesh, Karnataka, Maharashtra, Tamil Nadu, Odisha, Delhi, and Madhya Pradesh.
+- **Royal Masonry Grid**: Dynamic staggered cards with UNESCO World Heritage badges, bookmarks, and live distance indicators.
 
-- 📍 Custom heritage markers
-- 📏 Live distance calculation
-- 🧭 Location-based discovery
-- 🚗 Turn-by-turn navigation support
-- 🗺️ Interactive map experience
+### 📖 Immersive Place Details
+- **Parallax Hero Banner**: High-definition monument imagery with UNESCO accreditation badges and quick stats.
+- **Historical & Architectural Chronicles**: Deep storytelling covering dynastic patronage (Cholas, Mughals, Guptas, Rajputs, Nayakas, Senas), built eras, and engineering marvels.
+- **Built-in Audio Guide Player**: Interactive player with audio waveform, progress slider, 10-second rewind/forward, speed controls (1.0x - 1.5x), and multi-lingual narration transcripts (*English, Hindi, Bengali, Sanskrit*).
+- **Virtual Photo Gallery**: High-resolution zoomable architectural photograph gallery.
+- **Travel & Visit Guide**: Best seasons to visit, operating hours, ticket fees, and nearby heritage circuits.
 
----
-
-🏛️ Heritage Exploration
-
-Discover India's cultural landmarks through a visually rich exploration interface.
-
-- 🛕 Temples
-- 🏰 Forts
-- 🗿 Historical monuments
-- 🕳️ Ancient caves
-- 🏯 Heritage structures
-- 📚 Categorized exploration
-
----
-
-📖 Place Details
-
-Each heritage destination has a dedicated information page containing relevant historical and travel information.
-
-- Historical background
-- Location information
-- Distance from the user
-- Navigation action
-- Heritage category
-- Visual presentation
+### 🎭 Cultural Services Hub
+- 🎉 **Festival Calendar 2026**: Interactive celebration timeline with ritual breakdowns, countdowns, festive delicacies (Bhog), and notification reminders (*Durga Puja, Jagaddhatri Puja, Diwali, Dev Deepawali, Hampi Utsav, Pushkar Fair, Jagannath Ratha Yatra*).
+- 🎟️ **Heritage Monument Passes**: Instant digital entry pass booking simulator with date and time-slot selectors, adult/child steppers, and generated confirmed digital QR passes.
+- 🛍️ **Kala Bazaar (Artisans & Handicrafts)**: Discover verified GI-tagged Indian crafts (*Krishnanagar Clay Dolls, Kashmiri Pashmina, Varanasi Katan Silk, Jaipur Blue Pottery, Bastar Dhokra, Tanjore Gold Paintings*) with artisan guild connections.
+- 🤖 **Veda Cultural AI Assistant**: Conversational AI guide with historical knowledge base, temple architecture comparative analysis (Nagara vs Dravidian), and 3-day travel itinerary planners.
+- 📜 **Heritage Trivia Quiz**: Interactive multi-question quiz testing cultural knowledge with scoring and "Royal Heritage Scholar" badges.
+- 🚨 **Off-Grid SOS & Pilgrim Safety Beacon**: Simulated BLE mesh beacon broadcasting user coordinates with direct emergency dialers (*112 Police, 1363 Tourist Helpline*).
 
 ---
 
-🎭 Cultural Services
+## 🎨 Royal Visual Experience
 
-Sanskriti brings useful cultural-tourism services together in one place.
+Sanskriti follows a distinctive visual identity inspired by India's imperial architecture and ancient manuscripts:
 
-Service| Description
-🎉 Festival Calendar| Discover cultural festivals and events
-🎟️ Heritage Tickets| Quick access to heritage ticket information
-🎧 Audio Guides| Explore destinations through audio-based guidance
-🛍️ Kala Bazaar| Discover local handicrafts and cultural products
-
----
-
-🎨 Royal Visual Experience
-
-Sanskriti follows a distinctive visual identity inspired by India's cultural heritage.
-
-Design characteristics:
-
-- 🌑 Dark UI
-- 🟡 Signature Gold Accent — "#D4AF37"
-- ✨ Modern card-based interface
-- 🏛️ Heritage-inspired visual language
-- 📱 Mobile-first responsive experience
-- 🎯 Simple and intuitive navigation
+- 🌑 **Obsidian Dark Foundation**: `#0C0C10` & `#14141C`
+- 🟡 **Signature Imperial Gold Accents**: `#D4AF37`, `#F5E6C8`, `#FFDF73`
+- 🏛️ **Regal Typography**: *Cinzel*, *Marcellus*, *Rozha One*, and *Outfit* via Google Fonts
+- ✨ **Glassmorphism & Gold Gradients**: Intricate borders, subtle golden glow effects, and responsive card micro-animations
 
 ---
 
-📸 App Preview
+## 📸 App Preview
 
-Home Screen| Place Details
-<img src="screenshots/home.png" width="250" alt="Sanskriti Home Screen">| <img src="screenshots/details.png" width="250" alt="Sanskriti Place Details">
+| Home & Discover | Heritage Radar Map | Place Details |
+| :---: | :---: | :---: |
+| *(Staggered Masonry Grid)* | *(Interactive Dark Map & Radar)* | *(Parallax Hero & Chronicles)* |
 
-Heritage Radar| Cultural Services
-<img src="screenshots/map.png" width="250" alt="Sanskriti Heritage Radar">| <img src="screenshots/services.png" width="250" alt="Sanskriti Services Hub">
-
-«Note: Make sure the corresponding images are available inside the "screenshots/" directory before pushing the README.»
-
----
-
-🛠️ Tech Stack
-
-Frontend
-
-- Flutter
-- Dart
-- Material Design
-- Custom Flutter UI components
-
-APIs & Services
-
-- Google Maps
-- Geolocation
-- External navigation
-- URL launching
-
-Flutter Packages
-
-Package| Purpose
-"google_maps_flutter"| Interactive Google Maps
-"geolocator"| Location and distance calculation
-"url_launcher"| External navigation and links
+| Cultural Services Hub | Festival Calendar | Kala Bazaar Crafts |
+| :---: | :---: | :---: |
+| *(Services Ecosystem)* | *(Festive Timeline & Delicacies)* | *(GI-Tagged Artisan Showcase)* |
 
 ---
 
-🏗️ Project Architecture
+## 🛠️ Tech Stack & Architecture
 
-Sanskriti follows a modular Flutter project structure to keep the application maintainable and scalable.
-
+```
 sanskriti/
-│
 ├── android/
 ├── ios/
-│
 ├── lib/
-│   ├── main.dart
-│   │
-│   ├── screens/
-│   │   ├── home_screen.dart
-│   │   ├── details_screen.dart
-│   │   ├── map_screen.dart
-│   │   └── services_screen.dart
-│   │
-│   ├── widgets/
-│   │   └── reusable_widgets.dart
-│   │
+│   ├── main.dart                      # Application entrypoint & theme setup
+│   ├── app_theme.dart                 # Royal Obsidian & Gold Design System
 │   ├── models/
-│   │   └── heritage_place.dart
-│   │
-│   ├── themes/
-│   │   └── app_theme.dart
-│   │
-│   └── navigation/
-│       └── app_navigation.dart
-│
-├── assets/
-│   ├── images/
-│   └── icons/
-│
-├── screenshots/
-│   ├── home.png
-│   ├── details.png
-│   ├── map.png
-│   └── services.png
-│
-├── pubspec.yaml
-└── README.md
+│   │   ├── heritage_place.dart        # Heritage monument data structure
+│   │   ├── festival.dart              # Cultural festival data model
+│   │   ├── craft_item.dart            # Kala Bazaar craft & artisan model
+│   │   ├── ticket_booking.dart        # Digital monument pass model
+│   │   └── quiz_question.dart         # Heritage trivia question model
+│   ├── data/
+│   │   ├── heritage_repository.dart   # 14+ curated Indian monuments repository
+│   │   ├── festival_repository.dart   # Major Indian festivals repository
+│   │   ├── kala_bazaar_repository.dart# GI-tagged handicrafts repository
+│   │   └── quiz_repository.dart       # Trivia questions repository
+│   ├── services/
+│   │   ├── location_service.dart      # Geolocator, distance calculations & navigation
+│   │   ├── audio_service.dart         # Audio tour guide state manager & ambient sounds
+│   │   ├── ai_heritage_service.dart   # Veda AI conversational cultural guide
+│   │   └── favorites_service.dart     # Bookmarks and reminder state management
+│   ├── screens/
+│   │   ├── splash_screen.dart         # Royal animated splash screen with shloka
+│   │   ├── main_navigation.dart       # 5-tab navigation bar with floating SOS beacon
+│   │   ├── home_screen.dart           # Discover page with spotlight & masonry grid
+│   │   ├── details_screen.dart        # Deep chronicle, audio tour & architecture tabs
+│   │   ├── map_screen.dart            # Heritage Radar interactive dark map
+│   │   ├── services_screen.dart       # Cultural services hub
+│   │   ├── festival_calendar_screen.dart # Festive timeline with traditions & food
+│   │   ├── kala_bazaar_screen.dart    # Artisan craft discovery & contact modal
+│   │   ├── ticket_booking_screen.dart # E-Pass generator with simulated QR codes
+│   │   ├── ai_assistant_screen.dart   # Veda AI chat interface with preset prompts
+│   │   ├── quiz_screen.dart           # Interactive heritage trivia game
+│   │   └── favorites_screen.dart      # Saved monuments & active festival alerts
+│   └── widgets/
+│       ├── heritage_card.dart         # Reusable masonry monument card
+│       ├── audio_guide_bottom_sheet.dart # Royal audio player bottom sheet
+│       └── sos_dialog.dart            # Off-Grid SOS emergency beacon dialog
+└── test/
+    └── widget_test.dart               # Complete unit & widget test suite (10/10 passed)
+```
 
 ---
 
-🚀 Getting Started
+## 🚀 Getting Started
 
-Follow the steps below to run Sanskriti locally.
+### 📋 Prerequisites
+- **Flutter SDK**: `>= 3.0.0 < 4.0.0`
+- **Dart SDK**: Compatible with Flutter SDK
+- Android Studio / VS Code with Flutter extension
+- An Android Device or Emulator
 
-📋 Prerequisites
+### 📥 1. Clone the Repository
+```bash
+git clone https://github.com/Souvik-Das-23/SANSKRITI.git
+cd SANSKRITI/sanskriti
+```
 
-Make sure you have the following installed:
-
-- "Flutter SDK" (https://flutter.dev/)
-- Dart SDK
-- Android Studio or VS Code
-- Android SDK
-- A physical Android device or Android Emulator
-- Google Cloud Platform account
-- Google Maps API Key
-
----
-
-📥 1. Clone the Repository
-
-git clone https://github.com/your-username/sanskriti.git
-
-Navigate into the project:
-
-cd sanskriti
-
----
-
-📦 2. Install Dependencies
-
-Run:
-
+### 📦 2. Install Dependencies
+```bash
 flutter pub get
+```
 
----
-
-🗺️ 3. Configure Google Maps API
-
-Sanskriti uses Google Maps for the Heritage Radar feature.
-
-Step 1
-
-Create or open a project in Google Cloud Console.
-
-Step 2
-
-Enable:
-
-- Maps SDK for Android
-- Geocoding API, if required
-- Any additional Google Maps services used by your implementation
-
-Step 3
-
-Create an API key.
-
-Step 4
-
-Add your API key to:
-
-android/app/src/main/AndroidManifest.xml
-
-Example:
-
-<meta-data
-    android:name="com.google.android.geo.API_KEY"
-    android:value="YOUR_GOOGLE_MAPS_API_KEY"/>
-
-«⚠️ Never commit unrestricted API keys to a public GitHub repository. Use appropriate API restrictions and protect sensitive credentials.»
-
----
-
-📍 4. Configure Location Permissions
-
-For Android, ensure location permissions are configured in:
-
-android/app/src/main/AndroidManifest.xml
-
-Example:
-
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-
-Make sure your application requests runtime location permission where required.
-
----
-
-▶️ 5. Run the Application
-
-Check connected devices:
-
-flutter devices
-
-Then run:
-
+### ▶️ 3. Run the Application
+```bash
 flutter run
+```
 
-For a release build:
-
-flutter build apk --release
-
-The generated APK can be found inside the Flutter build output directory.
-
----
-
-🔐 Security
-
-If you are publishing this project publicly, avoid committing:
-
-- API keys
-- Passwords
-- Access tokens
-- Private certificates
-- Signing keys
-- Environment secrets
-
-For Google Maps, restrict your API key by:
-
-- Application
-- API
-- Platform
-
-This keeps your credentials from becoming an accidental donation to the internet.
+### 🧪 4. Run Automated Tests
+```bash
+flutter test
+```
 
 ---
 
-🧭 Application Flow
+## 🧭 Application Flow
 
-                    ┌─────────────────┐
-                    │     Sanskriti   │
-                    │     App Start   │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │   Home Screen   │
-                    └────────┬────────┘
-                             │
-              ┌──────────────┼──────────────┐
-              │              │              │
-              ▼              ▼              ▼
-        ┌──────────┐   ┌───────────┐   ┌────────────┐
-        │ Heritage │   │  Heritage │   │  Cultural  │
-        │ Explore  │   │   Radar   │   │  Services  │
-        └────┬─────┘   └─────┬─────┘   └────────────┘
-             │               │
-             ▼               ▼
-        ┌──────────┐    ┌────────────┐
-        │  Place   │    │  Nearby    │
-        │ Details  │    │ Heritage   │
-        └────┬─────┘    │ Locations  │
-             │          └─────┬──────┘
-             ▼                │
-        ┌──────────┐          ▼
-        │ Navigate │    ┌────────────┐
-        │ to Place │    │ Navigation │
-        └──────────┘    └────────────┘
-
----
-
-🌍 Future Roadmap
-
-Sanskriti is designed with future expansion in mind.
-
-Planned Features
-
-- [ ] 🔐 User authentication
-- [ ] ❤️ Save favorite heritage locations
-- [ ] ⭐ User reviews and ratings
-- [ ] 🌐 Multi-language support
-- [ ] 🎧 AI-powered audio guides
-- [ ] 🤖 AI cultural assistant
-- [ ] 📴 Offline heritage information
-- [ ] 📅 Live festival updates
-- [ ] 🎟️ Online ticket booking
-- [ ] 🛍️ Integrated handicraft marketplace
-- [ ] 🧭 Personalized travel recommendations
-- [ ] 📍 Advanced location-based recommendations
+```
+┌─────────────────────────────────┐
+│        Sanskriti App            │
+│  (Animated Royal Splash Screen) │
+└────────────────┬────────────────┘
+                 │
+                 ▼
+┌─────────────────────────────────┐
+│         Main Navigation         │
+│  (5 Tabs + Floating SOS Beacon) │
+└───────┬───┬───┬───┬─────────────┘
+        │   │   │   │
+  ┌─────┘   │   │   └──────────────────────┐
+  ▼         ▼   ▼                          ▼
+┌─────────┐ ┌─────────┐ ┌──────────────┐ ┌─────────────┐ ┌──────────────┐
+│  Home   │ │  Radar  │ │   Services   │ │ Kala Bazaar │ │   Veda AI    │
+│Discover │ │  (Map)  │ │     Hub      │ │ (Artisans)  │ │ (Assistant)  │
+└────┬────┘ └───┬─────┘ └──────┬───────┘ └─────────────┘ └──────────────┘
+     │          │              │
+     │          │        ┌─────┴────────────────────────────┐
+     │          │        ▼                                  ▼
+     │          │  ┌───────────┐ ┌──────────────┐    ┌─────────────┐
+     │          │  │ Festival  │ │ Ticket Pass  │    │ Heritage    │
+     │          │  │ Calendar  │ │  Booking & QR│    │ Trivia Quiz │
+     │          │  └───────────┘ └──────────────┘    └─────────────┘
+     ▼          ▼
+┌───────────────────────┐
+│  Place Details Screen │
+│  - Historical Saga    │
+│  - Architecture Marvel│
+│  - Audio Guide Player │
+│  - Photo Gallery      │
+│  - 1-Tap Navigation   │
+└───────────────────────┘
+```
 
 ---
 
-💡 Why Sanskriti?
+## 🌍 Future Roadmap
 
-India has an enormous cultural and historical landscape, but discovering it can often require information from multiple disconnected sources.
-
-Sanskriti aims to bring together:
-
-Discover → Learn → Navigate → Experience
-
-into one simple mobile platform.
-
-The goal is not only to help users find places, but also to encourage deeper engagement with India's cultural heritage.
+- 🔐 Cloud User Authentication & Profile Synchronization
+- 🎧 True Offline Audio Caching for Remote Archaeological Sites
+- 🥽 Augmented Reality (AR) Monument Restoration Overlays
+- 🌐 Multilingual Voice Synthesis for Audio Guides
+- 🎫 Live Payment Gateway Integration for ASI Monuments & Temple Darshans
 
 ---
 
-📊 Key Highlights
+## 👨‍💻 Author
 
-Category| Details
-📱 Platform| Android
-🧩 Framework| Flutter
-💻 Language| Dart
-🗺️ Maps| Google Maps
-📍 Location| Geolocator
-🎨 UI Theme| Dark + Gold
-🏛️ Focus| Cultural Tourism
-🧱 Architecture| Modular Flutter Architecture
+**Souvik Das**  
+*Flutter & Full-Stack Developer*  
+- GitHub: [@Souvik-Das-23](https://github.com/Souvik-Das-23)
+- Repository: [Souvik-Das-23/SANSKRITI](https://github.com/Souvik-Das-23/SANSKRITI)
 
 ---
 
-🤝 Contributing
+## 📄 License
 
-Contributions are welcome.
-
-If you would like to improve Sanskriti:
-
-1. Fork the repository
-2. Create a feature branch
-
-git checkout -b feature/new-feature
-
-3. Make your changes
-4. Commit your changes
-
-git commit -m "Add new feature"
-
-5. Push the branch
-
-git push origin feature/new-feature
-
-6. Open a Pull Request
-
----
-
-📄 License
-
-This project is currently available for educational and portfolio purposes.
-
-If you plan to distribute Sanskriti commercially, add an appropriate open-source or proprietary license to the repository.
-
----
-
-👨‍💻 Author
-
-Souvik Das
-
-BCA Student | Flutter & Web Developer
-
-Technologies
-
-"Flutter" · "Dart" · "Python" · "PHP" · "HTML" · "CSS" · "JavaScript"
-
----
-
-⭐ Support
-
-If you find Sanskriti interesting or useful, consider giving the repository a ⭐ on GitHub.
-
-Every star helps the project get a little more visibility.
-
----
-
-<p align="center">
-  <strong>🛕 Sanskriti — Discover. Learn. Experience India's Heritage.</strong>
-</p>
+This project is open-source and licensed under the [MIT License](LICENSE).

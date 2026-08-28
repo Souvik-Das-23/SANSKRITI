@@ -31,6 +31,11 @@
             android:name="flutterEmbedding"
             android:value="2" />
             
+        <!-- 👇 YAHAN AAYEGI TUMHARI GOOGLE MAPS API KEY 👇 -->
+        <meta-data 
+            android:name="com.google.android.geo.API_KEY"
+            android:value="YAHAN_APNI_ASLI_API_KEY_DAALNI_HAI"/>
+            
     </application>
     
     <!-- 👇 YAHI WOH PERMISSIONS HAIN JISSE NAVIGATION CHALEGA 👇 -->
