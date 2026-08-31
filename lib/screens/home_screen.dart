@@ -38,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     'Odisha',
     'Madhya Pradesh',
     'Delhi',
+    'Gujarat',
   ];
 
   @override

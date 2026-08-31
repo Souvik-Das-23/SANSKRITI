@@ -1,27 +1,34 @@
-# 🛕 Sanskriti — Discover India's Rich Heritage & Cultural Tourism Ecosystem
+# 🛕 Sanskriti (संस्कृति) — India's Rich Heritage & Cultural Tourism Ecosystem
 
 <div align="center">
 
+[![SIH 2026](https://img.shields.io/badge/Smart_India_Hackathon-Problem_Statement_26197-FF9933?style=for-the-badge&logo=gov.in)](SIH_PITCH_DECK.md)
+[![Theme](https://img.shields.io/badge/Theme-Heritage_%26_Culture-138808?style=for-the-badge)](#)
 [![Flutter](https://img.shields.io/badge/Flutter-3.44+-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.0+-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev)
-[![Theme](https://img.shields.io/badge/Theme-Obsidian_%26_Imperial_Gold-D4AF37?style=for-the-badge)](https://github.com/Souvik-Das-23/SANSKRITI)
-[![License: MIT](https://img.shields.io/badge/License-MIT-F5E6C8?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![GI-Tagged Crafts](https://img.shields.io/badge/Kala_Bazaar-GI--Verified_Artisans-FFDF73?style=for-the-badge)](#-kala-bazaar-gi-tagged-artisan-crafts)
-[![AI Powered](https://img.shields.io/badge/Veda_AI-Cultural_Scholar-8A2BE2?style=for-the-badge)](#-veda-cultural-ai-companion)
+[![Theme](https://img.shields.io/badge/UI_Style-Obsidian_%26_Imperial_Gold-D4AF37?style=for-the-badge)](https://github.com/Souvik-Das-23/SANSKRITI)
+[![AI Powered](https://img.shields.io/badge/Veda_AI_2.0-Multilingual_Scholar_%26_Lens-8A2BE2?style=for-the-badge)](#-veda-cultural-ai-companion--ai-heritage-lens)
+[![Intangible Heritage](https://img.shields.io/badge/Parampara-Living_Traditions_Vault-FF5722?style=for-the-badge)](#-sanskriti-parampara-intangible-cultural-heritage-vault)
+[![Spatial Computing](https://img.shields.io/badge/Spatial_3D-Kaalchakra_Time--Travel-00BCD4?style=for-the-badge)](#-3d-spatial-heritage-explorer--kaalchakra-time-travel)
 
-**A regal, next-generation digital portal bridging India's timeless civilizational heritage with modern spatial computing, artificial intelligence, fair-trade artisan commerce, and pilgrim safety.**
+**A regal, next-generation digital ecosystem bridging 5,000 years of Indian civilizational heritage with modern spatial computing, artificial intelligence, fair-trade artisan commerce, and pilgrim safety.**
 
-[Explore Features](#-key-features) • [Problem & Solution](#-the-problem--the-solution) • [App Screenshots](#-app-screenshots) • [Use Cases](#-practical-uses--target-audience) • [Architecture](#-tech-stack--architecture) • [Getting Started](#-getting-started)
+[Explore Features](#-key-features--modules) • [SIH Pitch Deck](SIH_PITCH_DECK.md) • [Problem & Solution](#-the-problem--the-solution) • [App Screenshots](#-app-screenshots) • [Architecture](#-tech-stack--architecture) • [Getting Started](#-getting-started)
 
 </div>
 
 ---
 
-## 📌 Executive Summary
+## 📌 Executive Summary (Smart India Hackathon Problem Statement 26197)
 
-India is home to thousands of years of dynastic chronicles, 40+ UNESCO World Heritage sites, millions of sacred temples and rock-cut caves, vibrant living festivals, and centuries-old artisan traditions. Yet, exploring this civilizational wealth has remained fragmented, commercialized, and disconnected from modern traveler needs.
+* **Problem Statement ID**: 26197  
+* **Title**: Student Innovation — Ideas that showcase the rich cultural heritage and traditions of India  
+* **Organization**: AICTE / MIC (Ministry of Education's Innovation Cell)  
+* **Theme**: Heritage & Culture | **Category**: Software  
 
-**Sanskriti** is an immersive Flutter application engineered with a **Royal Obsidian & Imperial Gold** aesthetic. It integrates **real-time GPS Heritage Radar navigation**, **curated historical chronicles**, **multilingual audio tours**, an **intelligent cultural AI scholar (Veda AI)**, a **GI-tagged direct artisan marketplace (Kala Bazaar)**, **digital ASI monument pass simulations**, and an **off-grid emergency SOS safety beacon** for remote heritage sites.
+India is home to thousands of years of dynastic chronicles, 42 UNESCO World Heritage sites, millions of sacred temples and rock-cut caves, vibrant living festivals, and centuries-old artisan traditions. Yet, exploring this civilizational wealth has remained fragmented, commercialized, and disconnected from modern traveler needs.
+
+**Sanskriti** is an immersive Flutter application engineered with a **Royal Obsidian & Imperial Gold** aesthetic. It integrates **real-time GPS Heritage Radar navigation**, **curated historical chronicles**, **multilingual audio tours**, **Sanskriti Parampara (Living Traditions & Intangible Heritage)**, an **interactive 3D spatial temple wireframe with Kaalchakra time-travel restoration**, an **intelligent cultural AI scholar & artifact scanner (Veda AI 2.0)**, a **GI-tagged direct artisan marketplace (Kala Bazaar)**, **digital ASI monument pass simulations**, a **gamified national cultural passport (Sanskriti Yatra)**, and an **off-grid emergency SOS safety beacon**.
 
 ---
 
@@ -30,35 +37,24 @@ India is home to thousands of years of dynastic chronicles, 40+ UNESCO World Her
 ```
 ┌──────────────────────────────────────────────────────────┐
 │                   THE HERITAGE CHALLENGE                 │
-│  Fragmented Info • Fake Handicrafts • Guide Scams        │
-│  Lost in Remote Sites • Missing Cultural Context         │
+│  Fragmented Info • Missing Intangible Heritage Context   │
+│  Exploited Artisans • Lack of 3D/AR Immersion for Youth  │
+│  Lost in Remote Sites • Counterfeit Handicrafts          │
 └────────────────────────────┬─────────────────────────────┘
                              │
                              ▼
 ┌──────────────────────────────────────────────────────────┐
 │                   THE SANSKRITI SOLUTION                 │
-│  ✨ Royal Discovery & GPS Radar Map                      │
-│  🤖 Veda Cultural AI Assistant                           │
-│  🛍️ Kala Bazaar: Direct GI-Tagged Artisan Guilds        │
-│  🎫 Digital E-Pass Simulator & QR Code                   │
-│  🎉 Interactive Festival Calendar with Authentic Rituals │
-│  🚨 Off-Grid Pilgrim SOS Emergency Beacon                │
+│  ✨ Royal Discovery & GPS Radar Map (16+ Monuments)      │
+│  🎭 Sanskriti Parampara: Classical Dances & Vedic Chants │
+│  🏛️ 3D Spatial Wireframes & Kaalchakra Time-Travel AR   │
+│  🤖 Veda AI 2.0: Multilingual Scholar & AI Heritage Lens │
+│  🛍️ Kala Bazaar: Direct GI-Tagged Fair-Trade Guilds      │
+│  🎖️ Sanskriti Yatra: Gamified National Cultural Passport │
+│  🎫 Digital ASI E-Passes with Cryptographic QR Codes     │
+│  🚨 Off-Grid Pilgrim SOS Emergency Beacon (112 / 1363)   │
 └──────────────────────────────────────────────────────────┘
 ```
-
-### 1. The Challenges in Cultural Tourism
-* **Fragmented & Inaccurate Information**: Historical context, architectural nuances, dynastic lineages, and visiting rules are scattered across disjointed blogs and outdated government portals.
-* **Lack of Authentic Cultural Wisdom**: Generic tour guides often provide superficial anecdotes rather than deep architectural analysis (e.g., distinguishing between Nagara, Dravidian, and Vesara styles).
-* **Exploitation of Rural Master Artisans**: India's traditional handicraft masters (weavers, potters, sculptors) lose major revenues to middlemen, while markets are flooded with counterfeit machine-made replicas.
-* **Disorganized Ticketing & Festival Planning**: Tourists struggle with monument pass bookings and lack clarity on festival dates, rituals, and traditional delicacies (*Bhog/Prasad*).
-* **Safety Concerns in Remote Archaeological Sites**: Exploring isolated forts, rock-cut caves, and ghats often means low connectivity and limited access to emergency assistance.
-
-### 2. How Sanskriti Solves Them
-* **Single Unified Heritage Hub**: Instant access to 14+ deeply researched heritage destinations with dynastic chronicles, UNESCO badges, and state-wise categorization.
-* **Veda AI Cultural Companion**: An on-device AI historian trained to explain dynastic sagas, temple architecture differences, and construct custom 3-day travel itineraries.
-* **Direct GI-Tagged Kala Bazaar**: Connects travelers directly with verified rural artisan guilds (Krishnanagar Clay Dolls, Kashmiri Pashmina, Varanasi Katan Brocade, Jaipur Blue Pottery) ensuring fair trade.
-* **Integrated Monument Passes & Festival Tracker**: Instant digital pass generation with simulated QR check-ins alongside a comprehensive festival timeline with countdowns and ritual guides.
-* **Off-Grid Pilgrim SOS Beacon**: Quick-trigger emergency protocol broadcasting GPS coordinates with 1-tap direct dialing to 112 Police and 1363 Tourist Helplines.
 
 ---
 
@@ -84,80 +80,38 @@ India is home to thousands of years of dynastic chronicles, 40+ UNESCO World Her
 
 ## ✨ Key Features & Modules
 
-### 🏛️ 1. Exploring India — Royal Discovery & Home
-* **Smart Cultural Search**: Instant real-time search across monument names, dynasties, and temple complexes.
-* **Heritage Story Avatars**: Quick-access circular visual stories highlighting crown jewels: *Taj Mahal, Hampi, Konark, Amber Fort, Ajanta Caves, Meenakshi Amman*.
-* **Spotlight of the Week**: Curated hero showcases featuring high-resolution artwork and instant audio guide access.
-* **Multi-Tier Filtering**: Filter seamlessly by architecture category (*Temples, Forts, Caves, Monuments, Palaces, Sacred Ghats*) and by State (*West Bengal, Rajasthan, Uttar Pradesh, Karnataka, Maharashtra, Tamil Nadu, Odisha, etc.*).
+### 🎭 1. Sanskriti Parampara — Intangible Cultural Heritage (ICH) Vault
+* **8 Classical Dance Forms**: Bharatanatyam, Kathakali, Odissi, Kathak, Manipuri, Kuchipudi, Mohiniyattam, and Sattriya with mudras, origin history, and costume analysis.
+* **Ancient Martial Arts**: Kalaripayattu, Silambam, Gatka, Thang-Ta, and Mardani Khel.
+* **Ancient Indian Engineering & Metallurgy**: Rustless Gupta Iron Pillar metallurgy, Konark solar alignments, and subterranean Baoli/Stepwell hydro-engineering.
+* **Sacred Vedic Shlokas & Chants**: Sanskrit shlokas (Maha Shanti Mantra, Gayatri Mantra) with audio player, Sanskrit text, English philosophical translation, and acoustic frequency resonance notes.
 
-### 🗺️ 2. Heritage Radar & Live GPS Navigation
-* **CartoDB Dark Matter Map Engine**: High-performance interactive dark map styled to match the royal obsidian aesthetic.
-* **Categorized Map Pins**: Distinct color-coded glyphs for Temples (Gold), Forts (Crimson), Caves (Emerald), Palaces (Sapphire), and Sacred Ghats (Cyan).
-* **Live GPS Distance Calculation**: Computes real-time distance from the user's current GPS location to each monument.
-* **Turn-by-Turn Routing**: One-tap handoff to native Google Maps for seamless driving directions.
+### 🏛️ 2. 3D Spatial Heritage Explorer & "Kaalchakra" Time-Travel
+* **Interactive 3D Temple Wireframe Projection**: 360-degree rotatable spatial projection of iconic structures (Konark Sun Temple, Kailash Monolith, Hampi Stone Chariot).
+* **Architectural Hotspot Inspector**: Tap-to-inspect structural anatomy: *Garbhagriha (Sanctum)*, *Shikhara/Vimana (Spire)*, *Mandapa (Pillared Hall)*, and *Kaalachakra (Solar Spokes)*.
+* **"Kaalchakra" Time-Travel Comparison Slider**: Interactive before/after split shader showing ruined monuments restored to their 12th-century golden era splendor.
 
-### 📖 3. Immersive Chronicles & Audio Guides
-* **Deep Dynastic Saga**: In-depth historical chronicles documenting founding dynasties (Cholas, Guptas, Rajputs, Mughals, Nayakas, Senas).
-* **Architectural Marvel Breakdown**: Technical breakdowns of intricate rock-cut engineering, Vimanas, Gopurams, and acoustic chambers.
-* **Built-in Audio Player**: Custom waveform player with 10s skip controls, playback speed adjustments (1.0x to 1.5x), and transcripts in *English, Hindi, Bengali, and Sanskrit*.
-* **Travel Companion Info**: Operating hours, entry fees, best seasons to visit, and nearby heritage circuits.
+### 🤖 3. Veda Cultural AI Companion & AI Heritage Lens
+* **AI Heritage Lens (Visual Scanner Simulation)**: Simulated image scanner identifying temple sculptures, dynasties (Chola, Gupta, Rajput, Mughal), and crafts (Bankura Terracotta, Lost-Wax Bronze) with confidence scores and ASI status.
+* **Multilingual Cultural AI Conversation**: Native conversational support in English, Hindi (हिन्दी), and Bengali (বাংলা).
+* **3-Day Curated Cultural Trails**: Automated generation of regional cultural circuits (Golden Triangle, Chola Temple Circuit, Desert Forts of Rajasthan).
 
-### 🤖 4. Veda Cultural AI Companion
-* **Dynasty & Architecture Scholar**: Conversational assistant answering complex civilizational questions (e.g., *"How is Dravidian architecture different from Nagara?"*).
-* **Custom Travel Itinerary Generator**: Generates rich 3-Day cultural itineraries tailored to specific regions and interests.
-* **Preset Prompt Chips**: Quick-tap chips for effortless exploration of dynastic timelines, UNESCO trivia, and hidden architectural secrets.
+### 🎖️ 4. Sanskriti Yatra — Gamified National Cultural Passport
+* **Zone-Wise Stamp Collection**: Explore and stamp heritage sites across 6 Indian Cultural Zones (North, South, East, West, Central, North-East).
+* **Explorer Progression**: Progress from *Vedic Seeker* to *Dharmik Explorer* to *Royal Heritage Scholar*.
+* **Official Digital Certificate**: Generates a shareable verified Royal Scholar Certificate of Achievement.
 
-### 🛍️ 5. Kala Bazaar — Authentic GI-Tagged Handicrafts
-* **Fair-Trade Artisan Economy**: Promotes India's authentic, Geographical Indication (GI) tagged traditional art forms directly from rural master guilds.
-* **Curated Craft Catalog**:
-  - *Krishnanagar Clay Dolls* (Ghurni, West Bengal)
-  - *Authentic Handwoven Pashmina Shawl* (Kanihama, Jammu & Kashmir)
-  - *Varanasi Katan Silk Brocade* (Madanpura, Varanasi)
-  - *Jaipur Blue Pottery Floral Plate* (Kot Jewar, Rajasthan)
-  - *Bastar Tribal Dhokra Bell Metal* (Kondagaon, Chhattisgarh)
-  - *Thanjavur 22K Gold Foil Painting* (Thanjavur, Tamil Nadu)
-* **Direct Guild Connection**: View craft origin, heritage story, certified GI tags, and direct artisan contact simulation.
+### 🛍️ 5. Kala Bazaar — Authentic GI-Tagged Fair-Trade Crafts
+* **Direct Guild Connection**: Connects buyers directly with verified rural artisan cooperatives (Krishnanagar Clay Dolls, Kashmiri Pashmina, Varanasi Katan Silk, Jaipur Blue Pottery).
+* **GI Tag Verification**: Complete Geographical Indication certificate numbers and craft provenance breakdowns.
 
-### 🎟️ 6. Heritage Monument E-Passes & Digital QR Codes
-* **Digital Pass Booking Simulator**: Select monument, visit date, morning/afternoon time slots, and party size (Adults & Children).
-* **Instant Digital QR Pass Generation**: Produces a scannable royal digital ticket pass with unique booking IDs for hassle-free entry simulation.
+### 🎟️ 6. Digital ASI Monument E-Passes & QR Codes
+* **Digital Pass Booking Simulator**: Select monument, date, time slots, and visitors.
+* **Scannable Royal QR Codes**: Generates cryptographic digital entry passes for hassle-free entry simulation.
 
-### 🎉 7. Living Festival Calendar & Delicacy Guide
-* **Interactive Festive Timeline**: Countdown and celebration schedule for India's premier cultural festivals (*Durga Puja, Jagaddhatri Puja, Diwali, Dev Deepawali, Hampi Utsav, Pushkar Camel Fair, Jagannath Ratha Yatra*).
-* **Tradition & Ritual Breakdown**: Step-by-step guides on historic significance and ceremonies.
-* **Sacred Bhog & Festive Delicacies**: Authentic recipes and significance of traditional foods (e.g., *Khichuri Bhog, Labra, Ghevar, Malpua, Chappan Bhog*).
-
-### 📜 8. Heritage Trivia Quiz (Royal Scholar Certification)
-* **Gamified Cultural Learning**: Engaging multi-level quiz testing knowledge on temple architecture, dynastic rulers, and ancient engineering feats.
-* **Interactive Scoring & Badges**: Earn the prestigious *Royal Heritage Scholar* badge upon mastering the questions.
-
-### 🚨 9. Off-Grid Pilgrim SOS Beacon
+### 🚨 7. Off-Grid Pilgrim SOS Beacon
 * **Emergency GPS Broadcaster**: Immediate retrieval and display of exact GPS coordinates (Latitude, Longitude, Altitude).
-* **Direct Emergency Hotlines**: 1-Tap quick connection with **112 All-India Police Emergency** and **1363 Ministry of Tourism Helpline**.
-* **Offline Safety Protocols**: Actionable guidelines for first aid, lost party regrouping, and temple crowd management.
-
----
-
-## 🎯 Practical Uses & Target Audience
-
-| User Persona | How Sanskriti Empowers Them |
-| :--- | :--- |
-| **🎒 Heritage Travelers & Backpackers** | Discover nearby hidden monuments using the GPS Heritage Radar, book digital monument passes, and listen to self-guided audio tours. |
-| **🎓 Students, Historians & Researchers** | Ask Veda AI complex questions about dynastic chronologies, examine architectural blueprints, and test their knowledge via quizzes. |
-| **🛕 Pilgrims & Cultural Observers** | Plan visits around the Festival Calendar, learn about sacred temple delicacies (*Bhog*), and stay protected with the Off-Grid SOS Beacon. |
-| **🛍️ Ethical Consumers & Art Patrons** | Purchase and support authentic, certified GI-tagged crafts directly from verified Indian artisan guilds via Kala Bazaar. |
-| **✈️ International Tourists** | Gain an authentic, scam-free, and respectful introduction to India's vast cultural landscape with multilingual guides and clear logistics. |
-
----
-
-## 🎨 Royal Design Philosophy
-
-Sanskriti is built upon a distinct visual design system inspired by ancient royal courts, sandstone temples, and illuminated manuscripts:
-
-* 🌌 **Obsidian Dark Canvas** (`#0C0C10` & `#14141C`): Provides a modern, glare-free aesthetic that lets colorful monument photography stand out.
-* 👑 **Imperial Gold Accents** (`#D4AF37`, `#FFDF73`, `#F5E6C8`): Symbolic of India's golden heritage, used across glowing borders, chips, and typography.
-* ✒️ **Regal Typography**: Powered by Google Fonts using *Cinzel* for headlines, *Marcellus* for subheadings, and *Outfit* for crisp modern readability.
-* 💎 **Glassmorphism & Depth**: Subtle blur effects, golden gradients, and micro-interactions that make every screen feel tactile and alive.
+* **1-Tap Direct Emergency Dialing**: Instant connection with **112 All-India Police Emergency** and **1363 Ministry of Tourism Helpline**.
 
 ---
 
@@ -165,124 +119,85 @@ Sanskriti is built upon a distinct visual design system inspired by ancient roya
 
 ```
 sanskriti/
-├── android/                           # Android native configuration (SDK 36, App Icons, Splash)
-├── ios/                               # iOS native configuration
-├── assets/
-│   ├── icon/                          # App launcher icon assets
-│   ├── screenshots/                   # High-res app preview screenshots
-│   └── app_icon.png                   # Splash & brand logo
 ├── lib/
 │   ├── main.dart                      # App entry point & theme initialization
-│   ├── app_theme.dart                 # Obsidian & Imperial Gold Design System & Typography
+│   ├── app_theme.dart                 # Obsidian & Imperial Gold Design System
 │   ├── models/
-│   │   ├── heritage_place.dart        # Monument data model (Dynasty, Era, Audio, GPS, Gallery)
-│   │   ├── festival.dart              # Festival data model (Dates, Rituals, Delicacies)
-│   │   ├── craft_item.dart            # Kala Bazaar craft model (GI-Tag, Guild, Price)
-│   │   ├── ticket_booking.dart        # Monument E-pass model (QR code, slots, fees)
-│   │   └── quiz_question.dart         # Trivia quiz questions & explanations model
+│   │   ├── heritage_place.dart        # Monument data model (Dynasty, Era, Audio, GPS)
+│   │   ├── tradition.dart             # Intangible Cultural Heritage model (Dances, Chants)
+│   │   ├── festival.dart              # Festival & Delicacy data model
+│   │   ├── craft_item.dart            # Kala Bazaar GI-tagged craft model
+│   │   ├── ticket_booking.dart        # Monument E-pass model (QR code, slots)
+│   │   └── quiz_question.dart         # Trivia quiz questions & explanations
 │   ├── data/
-│   │   ├── heritage_repository.dart   # Curated repository of 14+ Indian heritage monuments
-│   │   ├── festival_repository.dart   # 2026 Indian festival timeline & ritual repository
+│   │   ├── heritage_repository.dart   # 16+ Curated Indian heritage monuments
+│   │   ├── traditions_repository.dart # Intangible Cultural Heritage repository
+│   │   ├── festival_repository.dart   # 2026 Indian festival timeline
 │   │   ├── kala_bazaar_repository.dart# Authentic GI-tagged craft repository
 │   │   └── quiz_repository.dart       # Cultural trivia questions repository
 │   ├── services/
-│   │   ├── location_service.dart      # Geolocator GPS proximity calculations & Map launchers
+│   │   ├── location_service.dart      # Geolocator GPS proximity calculations
 │   │   ├── audio_service.dart         # Audio tour guide state manager
-│   │   ├── ai_heritage_service.dart   # Veda AI intelligent cultural query handler
+│   │   ├── ai_heritage_service.dart   # Veda AI 2.0 multilingual & lens scanner
 │   │   └── favorites_service.dart     # Bookmarks and saved items manager
 │   ├── screens/
 │   │   ├── splash_screen.dart         # Royal animated splash screen with Vedic shloka
 │   │   ├── main_navigation.dart       # 5-Tab persistent navigation with SOS beacon
 │   │   ├── home_screen.dart           # Discover page with stories, search, spotlight & grid
-│   │   ├── details_screen.dart        # Deep chronicle, audio tour & architectural analysis
-│   │   ├── map_screen.dart            # Heritage Radar interactive dark map
-│   │   ├── services_screen.dart       # Cultural Services Ecosystem Hub
-│   │   ├── festival_calendar_screen.dart # Timeline of festivals, rituals & festive delicacies
-│   │   ├── kala_bazaar_screen.dart    # GI-tagged handicraft marketplace & artisan modal
-│   │   ├── ticket_booking_screen.dart # E-Pass booking simulator with generated QR codes
-│   │   ├── ai_assistant_screen.dart   # Veda Cultural AI chat interface with preset prompts
+│   │   ├── details_screen.dart        # Deep chronicle, audio tour & architecture analysis
+│   │   ├── map_screen.dart            # Heritage Radar interactive dark CartoDB map
+│   │   ├── services_screen.dart       # Cultural Services Ecosystem Bento Grid
+│   │   ├── parampara_screen.dart      # Living traditions, classical dances & Vedic chants
+│   │   ├── spatial_viewer_screen.dart # 3D spatial wireframes & Kaalchakra time-travel
+│   │   ├── heritage_passport_screen.dart # Sanskriti Yatra Cultural Passport & certificates
+│   │   ├── kala_bazaar_screen.dart    # GI-tagged handicraft marketplace
+│   │   ├── ticket_booking_screen.dart # E-Pass booking simulator with QR codes
+│   │   ├── ai_assistant_screen.dart   # Veda Cultural AI & AI Heritage Lens scanner
+│   │   ├── festival_calendar_screen.dart # Timeline of festivals, rituals & delicacies
 │   │   ├── quiz_screen.dart           # Interactive heritage trivia game with scoring
-│   │   └── favorites_screen.dart      # Saved monuments & custom heritage bookmarks
+│   │   └── favorites_screen.dart      # Saved monuments & custom bookmarks
 │   └── widgets/
 │       ├── heritage_card.dart         # Staggered masonry monument card with UNESCO badge
 │       ├── audio_guide_bottom_sheet.dart # Waveform audio tour player modal
 │       └── sos_dialog.dart            # Off-Grid emergency SOS beacon dialog
 └── test/
-    └── widget_test.dart               # Complete automated unit & widget test suite
+    └── widget_test.dart               # 16 automated unit & widget test suites
 ```
-
-### 📦 Key Dependencies
-* **Core Framework**: Flutter SDK (`>= 3.0.0 < 4.0.0`)
-* **Typography**: `google_fonts: ^6.1.0` (*Cinzel*, *Marcellus*, *Rozha One*, *Outfit*)
-* **Mapping & GIS**: `flutter_map: ^6.1.0`, `latlong2: ^0.9.0`, `geolocator: ^14.0.3`
-* **Layout & UI**: `flutter_staggered_grid_view: ^0.7.0`
-* **External Integration**: `url_launcher: ^6.3.2`, `http: ^1.6.0`
 
 ---
 
 ## 🚀 Getting Started
 
-### 📋 Prerequisites
-* **Flutter SDK**: `>= 3.0.0` ([Install Flutter](https://docs.flutter.dev/get-started/install))
-* **Dart SDK**: Included with Flutter
-* **Android Studio / VS Code** with Flutter & Dart extensions
-* An **Android Device** (USB Debugging enabled) or **Android Emulator** / **Windows Desktop**
-
-### 📥 1. Clone the Repository
+### 📥 1. Clone & Setup
 ```bash
 git clone https://github.com/Souvik-Das-23/SANSKRITI.git
 cd SANSKRITI/sanskriti
-```
-
-### 📦 2. Install Packages
-```bash
 flutter pub get
 ```
 
-### ▶️ 3. Run on Connected Device
+### ▶️ 2. Run on Device / Emulator / Desktop
 ```bash
-# Run on connected Android phone
+# Android
 flutter run -d android
 
-# Or run on Windows Desktop
+# Windows Desktop
 flutter run -d windows
 
-# Or run on Chrome Web
+# Chrome Web
 flutter run -d chrome
 ```
 
-### 🧪 4. Run Automated Tests
+### 🧪 3. Run Automated Tests
 ```bash
 flutter test
 ```
 
 ---
 
-## 🔮 Future Roadmap
-
-- [ ] **Augmented Reality (AR) Time-Travel Overlays**: Visualize ruined temples (like Konark or Hampi) in their original 12th-century grandeur.
-- [ ] **Live UPI / Payment Gateway Integration**: Real-time pass checkout for ASI monuments and Temple Darshan trusts.
-- [ ] **True Offline Audio Cache**: Pre-download entire audio tours for completely disconnected wilderness exploration.
-- [ ] **Multilingual Neural Voice Synthesis**: Authentic voice narrations in 12+ Indian regional languages.
-- [ ] **Artisan Guild Direct Commerce**: Direct e-commerce integration supporting verified rural cooperatives.
-
----
-
-## 👨‍💻 Author & Contributions
-
-**Souvik Das**  
-*Flutter & Full-Stack Engineer*  
-* 🐙 **GitHub**: [@Souvik-Das-23](https://github.com/Souvik-Das-23)  
-* 📂 **Repository**: [Souvik-Das-23/SANSKRITI](https://github.com/Souvik-Das-23/SANSKRITI)
-
-Contributions, issues, and feature requests are always welcome! Feel free to check the [issues page](https://github.com/Souvik-Das-23/SANSKRITI/issues).
-
----
-
-## 📄 License
+## 📄 License & Attribution
 
 This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
 
 <div align="center">
-<sub>Crafted with passion to celebrate India's eternal heritage. 🇮🇳</sub>
+<sub>Crafted with passion for Smart India Hackathon (SIH) 2026. 🇮🇳</sub>
 </div>
