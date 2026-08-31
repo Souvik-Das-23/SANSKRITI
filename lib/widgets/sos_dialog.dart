@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../app_theme.dart';
 import '../services/location_service.dart';
+import '../services/offline_sos_service.dart';
 
 class SosDialog extends StatefulWidget {
   const SosDialog({super.key});
@@ -40,6 +41,8 @@ class _SosDialogState extends State<SosDialog> with SingleTickerProviderStateMix
   }
 
   Future<void> _callEmergency(String number) async {
+    // Also trigger offline telemetry beacon
+    await OfflineSosService.triggerEmergencySosBeacon();
     final Uri url = Uri.parse('tel:$number');
     if (await canLaunchUrl(url)) {
       await launchUrl(url);

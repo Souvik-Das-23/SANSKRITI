@@ -1,7 +1,7 @@
 name: sanskriti
-description: "A modern Indian heritage showcase app."
+description: "SANSKRITI — Next-Generation Cultural Tourism & Civilizational Heritage Ecosystem"
 publish_to: 'none'
-version: 1.0.0+1
+version: 2.0.0+2
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -9,38 +9,63 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  
-  # UI Packages
-  flutter_staggered_grid_view: ^0.7.0
+
+  # ===================================================================
+  # 1. UI & DESIGN SYSTEM (Royal Obsidian & Imperial Gold)
+  # ===================================================================
   google_fonts: ^6.1.0
-  
-  # Map Packages
-  flutter_map: ^6.1.0
-  latlong2: ^0.9.0
-  geolocator: ^14.0.3
-  http: ^1.6.0
-  url_launcher: ^6.3.2
-  google_maps_flutter: ^2.18.0
+  flutter_staggered_grid_view: ^0.7.0
+  cached_network_image: ^3.3.1
+  flutter_animate: ^4.5.0
+  shimmer: ^3.0.0
+  qr_flutter: ^4.1.0
+
+  # ===================================================================
+  # 2. 3D SPATIAL COMPUTING & AR TIME-TRAVEL
+  # ===================================================================
+  model_viewer_plus: ^1.7.0     # Optimized 3D .glb spatial monument & ARCore rendering
+
+  # ===================================================================
+  # 3. GIS, MAPPING & GEOSPATIAL RADAR
+  # ===================================================================
+  flutter_map: ^6.1.0           # High-performance tile map engine
+  latlong2: ^0.9.0              # Geodetic coordinate calculations
+  geolocator: ^14.0.3           # High-precision hardware GPS positioning
+
+  # ===================================================================
+  # 4. SOVEREIGN AI & NETWORK PROTOCOLS
+  # ===================================================================
+  http: ^1.2.1                  # REST APIs (Bhashini NLTM, Gemini 1.5 Flash, ONDC)
+  url_launcher: ^6.3.0          # Emergency dialer (112, 1363) & external links
+
+  # ===================================================================
+  # 5. OFFLINE STORAGE & SAFETY SOS TELEPHONY
+  # ===================================================================
+  hive: ^2.2.3                  # Ultra-fast offline key-value & document database
+  hive_flutter: ^1.1.0          # Hive Flutter lifecycle bindings
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
   flutter_launcher_icons: ^0.13.1
-  flutter_native_splash: ^2.4.1 # 👈 YEH NAYA PACKAGE ADD KIYA
+  flutter_native_splash: ^2.4.1
+  hive_generator: ^2.0.1
+  build_runner: ^2.4.9
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/
 
-# App Icon Configuration
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/icon/app_icon.png"
 
-# 👇 YEH NAYI CONFIGURATION ADD KAREIN 👇
 flutter_native_splash:
-  color: "#121212" # Hamara Royal Dark background
-  image: "assets/app_icon.png" # Splash screen image
+  color: "#0C0C10"
+  image: "assets/app_icon.png"
   android_12:
-    color: "#121212"
+    color: "#0C0C10"
     image: "assets/app_icon.png"
