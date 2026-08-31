@@ -12,6 +12,57 @@ import '../models/heritage_place.dart';
 import '../services/location_service.dart';
 import 'details_screen.dart';
 
+enum MapStyleType {
+  googleHybrid,
+  googleStreet,
+  googleTerrain,
+  obsidianDark,
+}
+
+extension MapStyleTypeExt on MapStyleType {
+  String get displayName {
+    switch (this) {
+      case MapStyleType.googleHybrid:
+        return 'Google Satellite';
+      case MapStyleType.googleStreet:
+        return 'Google Maps Road';
+      case MapStyleType.googleTerrain:
+        return 'Google Terrain';
+      case MapStyleType.obsidianDark:
+        return 'Obsidian Dark';
+    }
+  }
+
+  String get tileUrl {
+    switch (this) {
+      case MapStyleType.googleHybrid:
+        // Google Maps Satellite with Labels
+        return 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}';
+      case MapStyleType.googleStreet:
+        // Google Maps Standard Road
+        return 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}';
+      case MapStyleType.googleTerrain:
+        // Google Maps Topo Terrain
+        return 'https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}';
+      case MapStyleType.obsidianDark:
+        return 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case MapStyleType.googleHybrid:
+        return Icons.satellite_alt;
+      case MapStyleType.googleStreet:
+        return Icons.map;
+      case MapStyleType.googleTerrain:
+        return Icons.terrain;
+      case MapStyleType.obsidianDark:
+        return Icons.dark_mode;
+    }
+  }
+}
+
 class DemoLocation {
   final String name;
   final String subtitle;
@@ -45,6 +96,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
   bool _isSonarHudMode = false;
   bool _isScanning = false;
   String _activeLocationName = 'Live GPS (Delhi)';
+  MapStyleType _selectedMapStyle = MapStyleType.googleHybrid; // Default to Google Satellite
 
   static const List<DemoLocation> _demoHotspots = [
     DemoLocation(
@@ -130,7 +182,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
     }
 
     _applyFilters();
-    _mapController.move(spot.latLng, 13.5);
+    _mapController.move(spot.latLng, 14.0);
 
     Future.delayed(const Duration(milliseconds: 400), () {
       setState(() => _isScanning = false);
@@ -149,7 +201,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
             const SizedBox(width: 10),
             Expanded(
               child: Text(
-                '🛰️ Radar Teleported to ${spot.name}! Detecting nearby monuments...',
+                '🛰️ Radar Teleported to ${spot.name}! Detecting nearby monuments on Google Maps...',
                 style: GoogleFonts.outfit(color: AppTheme.accentGold),
               ),
             ),
@@ -215,29 +267,110 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
     }
   }
 
+  void _showMapStylePickerModal() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: AppTheme.backgroundDark,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(26)),
+          border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.3)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.layers, color: AppTheme.accentGold, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  'GOOGLE MAPS RADAR LAYERS',
+                  style: GoogleFonts.outfit(
+                    color: AppTheme.accentGold,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            ...MapStyleType.values.map((style) {
+              final isSelected = _selectedMapStyle == style;
+              return Container(
+                margin: const EdgeInsets.only(bottom: 8),
+                decoration: BoxDecoration(
+                  color: isSelected ? AppTheme.accentGold.withValues(alpha: 0.15) : AppTheme.surfaceDark,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: isSelected ? AppTheme.accentGold : AppTheme.accentGold.withValues(alpha: 0.2),
+                  ),
+                ),
+                child: ListTile(
+                  leading: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: isSelected ? AppTheme.accentGold : Colors.black26,
+                    ),
+                    child: Icon(
+                      style.icon,
+                      color: isSelected ? Colors.black : AppTheme.accentGold,
+                      size: 18,
+                    ),
+                  ),
+                  title: Text(
+                    style.displayName,
+                    style: GoogleFonts.cinzel(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  trailing: isSelected
+                      ? const Icon(Icons.check_circle, color: AppTheme.accentGold, size: 18)
+                      : null,
+                  onTap: () {
+                    setState(() {
+                      _selectedMapStyle = style;
+                    });
+                    Navigator.pop(context);
+                  },
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,
       body: Stack(
         children: [
-          // 1. Interactive Dark Tile Map with Live Radar Overlay
+          // 1. Google Maps / High-Res Tile Map with Live Radar Overlay
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
               initialCenter: _userLatlng,
               initialZoom: 6.0,
               minZoom: 3.5,
-              maxZoom: 18.0,
+              maxZoom: 19.0,
             ),
             children: [
               TileLayer(
-                urlTemplate: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-                subdomains: const ['a', 'b', 'c', 'd'],
+                urlTemplate: _selectedMapStyle.tileUrl,
+                subdomains: _selectedMapStyle == MapStyleType.obsidianDark ? const ['a', 'b', 'c', 'd'] : const [],
                 userAgentPackageName: 'com.example.sanskriti',
               ),
 
-              // Animated Radar Sweep on Map
+              // Animated Rotating Radar Sweep on Map
               MarkerLayer(
                 markers: [
                   // Real-time rotating Radar Sweep Beam & Range Rings
@@ -265,8 +398,14 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                     child: Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppTheme.accentGold.withValues(alpha: 0.2),
+                        color: AppTheme.accentGold.withValues(alpha: 0.25),
                         border: Border.all(color: AppTheme.accentGold, width: 2),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.5),
+                            blurRadius: 6,
+                          ),
+                        ],
                       ),
                       child: const Center(
                         child: Icon(Icons.radar, color: AppTheme.accentGold, size: 20),
@@ -378,7 +517,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                                   Row(
                                     children: [
                                       Text(
-                                        'HERITAGE RADAR',
+                                        'GOOGLE MAPS RADAR',
                                         style: GoogleFonts.cinzel(
                                           color: AppTheme.accentGold,
                                           fontSize: 13,
@@ -405,13 +544,20 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                                     ],
                                   ),
                                   Text(
-                                    '$_activeLocationName • ${_filteredPlaces.length} Targets In Range',
+                                    '$_activeLocationName • ${_selectedMapStyle.displayName}',
                                     style: GoogleFonts.outfit(color: AppTheme.textMuted, fontSize: 10),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ],
                               ),
+                            ),
+
+                            // Map Layer Switcher (Google Maps Satellite / Street / Terrain)
+                            IconButton(
+                              icon: const Icon(Icons.layers_outlined, color: AppTheme.accentGold, size: 22),
+                              tooltip: 'Google Map Layer Switcher',
+                              onPressed: _showMapStylePickerModal,
                             ),
 
                             // Tactical HUD Mode Toggle
@@ -682,10 +828,10 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                                                       const Icon(Icons.navigation, color: AppTheme.accentGold, size: 12),
                                                       const SizedBox(width: 4),
                                                       Text(
-                                                        'Navigate',
+                                                        'Google Maps',
                                                         style: GoogleFonts.outfit(
                                                           color: AppTheme.accentGold,
-                                                          fontSize: 10,
+                                                          fontSize: 9,
                                                           fontWeight: FontWeight.bold,
                                                         ),
                                                       ),
@@ -750,7 +896,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
         child: SafeArea(
           child: Column(
             children: [
-              const SizedBox(height: 150), // Spacing below top bar
+              const SizedBox(height: 150),
 
               // Circular Sonar Radar Canvas
               Expanded(
@@ -900,9 +1046,9 @@ class MapRadarSweepPainter extends CustomPainter {
 
     // Outer Concentric Rings
     final ringPaint = Paint()
-      ..color = AppTheme.accentGold.withValues(alpha: 0.15)
+      ..color = AppTheme.accentGold.withValues(alpha: 0.2)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.0;
+      ..strokeWidth = 1.2;
 
     canvas.drawCircle(center, radius * 0.33, ringPaint);
     canvas.drawCircle(center, radius * 0.66, ringPaint);
@@ -914,7 +1060,7 @@ class MapRadarSweepPainter extends CustomPainter {
         startAngle: 0.0,
         endAngle: math.pi / 2,
         colors: [
-          AppTheme.accentGold.withValues(alpha: 0.35),
+          AppTheme.accentGold.withValues(alpha: 0.4),
           Colors.transparent,
         ],
         transform: GradientRotation(angle - math.pi / 2),
@@ -925,7 +1071,7 @@ class MapRadarSweepPainter extends CustomPainter {
     // Leading Radar Beam Line
     final linePaint = Paint()
       ..color = AppTheme.accentGoldLight
-      ..strokeWidth = 1.5;
+      ..strokeWidth = 1.8;
 
     final endPoint = Offset(
       center.dx + radius * math.cos(angle),
@@ -994,7 +1140,6 @@ class TacticalSonarPainter extends CustomPainter {
     // Dynamic Blips for nearby monuments
     for (int i = 0; i < places.length; i++) {
       final p = places[i];
-      // Simulated polar coordinates based on lat/lng offset
       double dLat = p.lat - userLocation.latitude;
       double dLng = p.lng - userLocation.longitude;
       double distFactor = math.min(math.sqrt(dLat * dLat + dLng * dLng) * 25.0, radius * 0.85);
